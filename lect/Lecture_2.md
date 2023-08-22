@@ -1,4 +1,4 @@
-# Lecture 2: Differential and Difference Equations
+Lecture 2: Differential and Difference Equations
 
 
 
@@ -21,7 +21,7 @@ $$
 $$
 where $u(x)$ is the temperature at location $x \in [0,1]$ and the "ice at the ends" mean the temperature at $u(0)=u(1)=0$ always! The heat from blowtorch is represented using the function $f(x)$ and it's set to a constant because it's uniform.
 
-Let's look at this differential equation analytically. What we need is some function $u(x)$ that satisfies $-\frac{d^2u}{dx^2}=1$. In other words, the second derivative of $u(x)$ should be $-1$. A function $u(x)=-\frac{1}{2}x^2$ satisfies this differential equation. So does another function $u(x)=-\frac{1}{2}x^2+Cx+D$, where $C$ and $D$ can be any constants! This is where Boundary Conditions come in and fix $C$ and $D$ values! This way we get an exact solution as $u(x)=-\frac{1}{2}x^2+\frac{1}{2}x$
+Let's look at this differential equation analytically. What we need is some function $u(x)$ that satisfies $-\frac{d^2u}{dx^2}=1$. In other words, the second derivative of $u(x)$ should be $-1$. A function $u(x)=-\frac{1}{2}x^2$ satisfies this differential equation. So does another function $u(x)=-\frac{1}{2}x^2+Cx+D$, where $C$ and $D$ can be any constants! This is where Boundary Conditions come in and fix $C$, $D$ values! This way we get an exact solution $u(x)=-\frac{1}{2}x^2+\frac{1}{2}x$
 
 >  Boundary Conditions enables a unique solution to the PDE! Hence they are very important in solving PDEs.
 
@@ -29,11 +29,10 @@ Let's look at this differential equation analytically. What we need is some func
 
 ## Difference Equations
 
-In order to solve the differential equation numerically, we have to represent it as a difference equation where the derivatives are defined or approximated numerically.
+In order to solve the differential equation numerically, we have to represent it as a difference equation where the derivatives are defined or approximated numerically. We can approximate the second derivative in Equation $(1)$ using Finite Difference and write the difference equation as
 $$
 - \frac{u_{i+1}-2u_i+u_{i-1}}{(\Delta x)^2}=f(x_i)=1 \tag{2}
 $$
-The above mentioned approximation to the derivative is defined using Finite Differences.
 
 Let's take a look at a few finite difference formulae approximating the 1st order derivative:
 
@@ -75,7 +74,7 @@ $$
                         &= u'(x)+\mathcal{O}(h)
 \end{aligned} \tag{9}
 $$
-Finally, subtracting $(6)$ from $(7)$, we get Centered Difference approximation:
+Finally, subtracting $(7)$ from $(6)$, we get Centered Difference approximation:
 $$
 \begin{aligned}
 \frac{u(x+h) - u(x-h)}{2h} &= u'(x)+\frac{2h^2}{3!}u'''(x)+\cdots \\ 
@@ -86,14 +85,13 @@ $$
 > Notice how we get 1st and 2nd order accuracy depending on the terms left after moving them around.
 
 Now we can get 2nd order derivatives in three ways:
-
 - $\Delta_F \Delta_B$
 
 - $\Delta_B \Delta_F$
 
 - $\Delta_C \Delta_C$ : This would be a weird choice because it will stretch too far on the stencil in a way that we get coefficients as $1\ \ \ \ \ 0\ \ \ \ \ -2\ \ \ \ \ \ \ \ 0\ \ \ \ \ \ \ 1$. 
 
-  >  This might sound unfamiliar, but I've discussed discretisation and stencil in the next section.
+  >  This might sound unfamiliar, but I'll discuss discretisation and stencil in the next section.
 
 Apart from this, we can also get $\Delta_F \Delta_B$ or $\Delta_B \Delta_F$ by adding $(6)$ and $(7)$ together:
 $$
@@ -107,7 +105,7 @@ $$
 
 ## Numerical Discretisation and Solution
 
-The very first step to solving a differential equation numerically is discretisation of the domain. Consider the PDE in Equation $(1)$, where the domain lies between 0 and 1. What discretisation does is instead of using a continuous domain, it uses a set of finite points on the domain to represent it (shown in diagram below). In this example, we will discretise this into 5 equispaced points with $\Delta x=0.25$ as the distance between two consecutive points. Also, each point is indexed using the small letter $i=0, 1, 2, 3, 4, 5$.
+The very first step to solving a differential equation numerically is discretisation of the domain. Consider the PDE in Equation $(1)$, where the domain lies between 0 and 1. What discretisation does is instead of using a continuous domain, it uses a set of finite points on the domain to represent it (shown in diagram below). In this example, we will discretise the domain into 5 equispaced points with $\Delta x=0.25$ as the distance between two consecutive points. Also, each point is indexed using the small letter $i=0, 1, 2, 3, 4$.
 
 ```
 
@@ -136,8 +134,6 @@ The problem now is to find $u_0, u_1, u_2, u_3 \text{ and } u_4$, as these 5 val
   $$
   -u_4+2u_3-u_2=(0.25)^2 \tag{14}
   $$
-
--  
 
 We now have 3 equations and 3 unknowns ($u_1, u_2, u_3$). Remember that we already know the boundary conditions which states that $u_0=u_4=0$. 
 
@@ -274,13 +270,14 @@ Similarly, if we increase the number of points, we get a more accurate solution!
 
 <img src="img/Lect2_u_T30.png" alt="Lect2_u3" style="zoom:100%;" />
 
-> An interesting observation is that for the previous case where the boundary conditions were fixed, we got accurate solution even when $n=3$, but that is not the case here. It's just a matter of getting lucky where the equispaced points and the constant force term matched up such that it ended up as a perfect scenario. Rest be assured, if you change anything like variable forcing term, it'll give less accurate solution for smaller $n$ values but that will still be $\mathcal{O}(h^2)$ accurate. 
+> An interesting observation is that for the previous case where the boundary conditions were fixed, we got accurate solution even when $n=3$. It's just a matter of getting lucky where the equispaced points and the constant force term matched up such that it ended up as a perfect scenario. Rest be assured, if you change anything like variable forcing term, it'll give less accurate solution for smaller $n$ values but that will still be $\mathcal{O}(h^2)$ accurate. 
 >
 > However, in this case we approximated the left boundary using the backward difference formula which is $\mathcal{O}(h)$ accurate. Hence, we'll get the final solution which is also $\mathcal{O}(h)$ accurate (error propagates!).
 
 For this simple problem, we can actually get a $\mathcal{O}(h^2)$ accuracy! Let's do that...
 
-Now, we have an idea that the solution should be parabolic (this can be confirmed using the exact solution). What we can do is use this fact which will give that $u_{-1} = u_1$, and instead of using forward difference we can use centered difference 
+Now, we have an idea that the solution should be parabolic (this can be confirmed using the exact solution). What we can do is use this fact which will give that $u_{-1} = u_1$. Another way to get to this same conclusion is by using the centered difference formula and approximate the left side boundary condition
+
 $$
 \frac{\partial u}{\partial x}\bigg|_{x=0} = \frac{u_1 - u_{-1}}{2 \Delta x} = 0 \tag{22}
 $$

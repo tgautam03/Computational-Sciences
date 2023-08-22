@@ -11,7 +11,7 @@ What are the special properties of this matrix?
 -  **Symmetric**: $K=K^T$
 - **Sparse (Tridiagonal)**: The point on sparsity is especially true when matrix $K$ is something like $100 \times 100$
 - **Toeplitz**: Constant diagonals, i.e. we have 2 and -1 across the diagonals
-- **Invertible**: Identifying that a matrix is invertible, is crucial to solving a system of equations. The standard way to find out if a matrix is invertible, is to row reduce it t and represent it in upper triangular form. Let's see how to do that.
+- **Invertible**: Identifying that a matrix is invertible, is crucial to solving a system of equations. The standard way to find out if a matrix is invertible, is to row reduce it and represent it in upper triangular form. Let's see how to do that.
 
 
 
@@ -19,7 +19,7 @@ What are the special properties of this matrix?
 
 Using the same $K_4$ matrix discussed above,
 
-- Picking the first column, where the pivot is $K_{11}$ element. We make all the elements below the pivot zero by performing row reduction operation $R_2 \rightarrow R_2 - (K_{11}/K_{21})R_1$. 
+- Picking the first column, where the pivot is $k_{11}$ element. We make all the elements below the pivot, zero by performing row reduction operation $R_2 \rightarrow R_2 - (k_{11}/k_{21})R_1$. 
   $$
   K_4=\begin{pmatrix}
       2 & -1 & 0 & 0\\
@@ -29,9 +29,7 @@ Using the same $K_4$ matrix discussed above,
       \end{pmatrix}
   $$
 
-- 
-
-- Next, move onto the 2nd column and again ensure that all elements below the pivot $K_{22}$ are zero by performing the row reduction operation $R_3 \rightarrow R_3 - (K_{22}/K_{32})R_2$.
+- Next, move onto the 2nd column and again ensure that all elements below the pivot $k_{22}$ are zero by performing the row reduction operation $R_3 \rightarrow R_3 - (k_{22}/k_{32})R_2$.
   $$
   K_4=
           \begin{pmatrix}
@@ -42,7 +40,7 @@ Using the same $K_4$ matrix discussed above,
           \end{pmatrix}
   $$
 
-- Do the same thing for the 3rd column, $R_4 \rightarrow R_4 - (K_{33}/K_{43})R_3$.
+- Do the same thing for the 3rd column, $R_4 \rightarrow R_4 - (k_{33}/k_{43})R_3$.
   $$
   K_4=
           \begin{pmatrix}
@@ -71,7 +69,7 @@ Matrix $C_4$ shares many properties with $K_4$ such as:
 - **Sparse (not Tridiagonal though)** 
 - **Toeplitz**
 
-However, this matrix is not invertible! We can do the row reduction stuff to verify this but there is another way to see this. If we pre multiply $C_4$ with ones vector as shown in equation $(4)$, we get all zeros as the resulting vector and by definition a matrix is invertible if and only if it has zero vector in its null space!
+However, this matrix is not invertible! We can do the row reduction stuff to verify this but there is another way to see this. If we multiply $C_4$ with ones vector as shown in equation $(4)$, we get all zeros as the resulting vector and by definition a matrix is invertible if and only if it has zero vector in its null space!
 $$
 \begin{pmatrix}
     2 & -1 & 0 & -1\\
