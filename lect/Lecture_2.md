@@ -1,4 +1,4 @@
-Lecture 2: Differential and Difference Equations
+# Lecture 2: Differential and Difference Equations
 
 
 
