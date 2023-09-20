@@ -62,19 +62,19 @@ We can write the above statement mathematically as well. Consider $$Cu=0$$ and i
 ## Practical Origin of Matrices
 - Consider a system of $$4$$ masses connected by springs (as shown below), and the matrix generated when trying to solve this system is $$K_4$$.
 	<div class="imgcap">
-  <img src="https://raw.githubusercontent.com/tgautam03/Computational-Sciences/master/assets/2023-09-11-Four-Special-Matrices/K4.png" alt="this slowpoke moves"  width="800"/>
+  <img src="https://raw.githubusercontent.com/tgautam03/Computational-Sciences/gh-pages/assets/2023-09-11-Four-Special-Matrices/K4.png" alt="this slowpoke moves"  width="800"/>
   <div class="thecap">Figure 1: Spring Mass System with fixed ends. </div>
   </div>
 
 - Now, if we remove the fixed ends and just tie the masses together, we get matrix $$C_4$$. This is where the term circulant comes from.
 	<div class="imgcap">
-  <img src="https://raw.githubusercontent.com/tgautam03/Computational-Sciences/master/assets/2023-09-11-Four-Special-Matrices/C4.png" alt="this slowpoke moves"  width="800"/>
+  <img src="https://raw.githubusercontent.com/tgautam03/Computational-Sciences/gh-pages/assets/2023-09-11-Four-Special-Matrices/C4.png" alt="this slowpoke moves"  width="800"/>
   <div class="thecap">Figure 2: Spring Mass System with ends atached to each other in circular fashion. </div>
   </div>
 
 - Just as an example, take the spring mass system which gives $$K_4$$ and free one end of support.
 	<div class="imgcap">
-  <img src="https://raw.githubusercontent.com/tgautam03/Computational-Sciences/master/assets/2023-09-11-Four-Special-Matrices/T4.png" alt="this slowpoke moves"  width="800"/>
+  <img src="https://raw.githubusercontent.com/tgautam03/Computational-Sciences/gh-pages/assets/2023-09-11-Four-Special-Matrices/T4.png" alt="this slowpoke moves"  width="800"/>
   <div class="thecap">Figure 3: Spring Mass System with one free end. </div>
   </div>
 	
@@ -82,7 +82,7 @@ We can write the above statement mathematically as well. Consider $$Cu=0$$ and i
 
 - For the sake of completeness, let's free both ends.
 	<div class="imgcap">
-  <img src="https://raw.githubusercontent.com/tgautam03/Computational-Sciences/master/assets/2023-09-11-Four-Special-Matrices/B4.png" alt="this slowpoke moves"  width="800"/>
+  <img src="https://raw.githubusercontent.com/tgautam03/Computational-Sciences/gh-pages/assets/2023-09-11-Four-Special-Matrices/B4.png" alt="this slowpoke moves"  width="800"/>
   <div class="thecap">Figure 4: Spring Mass System with both free ends. </div>
   </div>
 	
