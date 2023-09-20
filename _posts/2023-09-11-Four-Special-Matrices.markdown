@@ -20,13 +20,16 @@ What are the special properties of this matrix?
 ## Row Reduction
 Using the same $$K_4$$ matrix discussed in the previous section,
 
-- Picking the first column, where the pivot is $$k_{11}$$ element. We make all the elements below the pivot, zero by performing row reduction operation $$R_2 \rightarrow R_2 - (k_{11}/k_{21})R_1$$.$$$$K_4=\begin{pmatrix} 2 & -1 & 0 & 0\\ 0 & 3/2 & -1 & 0 \\ 0 & -1 & 2 & -1 \\ 0 & 0 & -1 & 2 \\ \end{pmatrix}$$$$
+- Picking the first column, where the pivot is $$k_{11}$$ element. We make all the elements below the pivot, zero by performing row reduction operation $$R_2 \rightarrow R_2 - (k_{11}/k_{21})R_1$$.
+
+$$K_4=\begin{pmatrix} 2 & -1 & 0 & 0\\ 0 & 3/2 & -1 & 0 \\ 0 & -1 & 2 & -1 \\ 0 & 0 & -1 & 2 \\ \end{pmatrix}$$
 
 - Next, move onto the 2nd column and again ensure that all elements below the pivot $$k_{22}$$ are zero by performing the row reduction operation $$R_3 \rightarrow R_3 - (k_{22}/k_{32})R_2$$.
 
   $$K_4= \begin{pmatrix} 2 & -1 & 0 & 0\\ 0 & 3/2 & -1 & 0 \\ 0 & 0 & 4/3 & -1 \\ 0 & 0 & -1 & 2 \\ \end{pmatrix}$$
 
 - Do the same thing for the 3rd column, $$R_4 \rightarrow R_4 - (k_{33}/k_{43})R_3$$.
+
   $$K_4= \begin{pmatrix} 2 & -1 & 0 & 0\\ 0 & 3/2 & -1 & 0 \\ 0 & 0 & 4/3 & -1 \\ 0 & 0 & 0 & 5/4 \\ \end{pmatrix}$$
 
 - For the final column, there's nothing below the pivot value.
