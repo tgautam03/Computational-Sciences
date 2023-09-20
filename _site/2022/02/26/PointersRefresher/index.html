@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Pointers for GPGPU</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Everything High Performance">
+    <link rel="canonical" href="http://localhost:4000/2022/02/26/PointersRefresher/">
+    <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Computational Science and Engineering posts" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+
+    <!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-3698471-23', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <div style="float:left; margin-top:10px; margin-right:10px;">
+    <a href="/feed.xml">
+      <img src="/assets/rssicon.svg" width="40">
+    </a>
+    </div>
+
+    <a class="site-title" href="/">Computational Science and Engineering</a>
+    
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Pointers for GPGPU</h1>
+    <p class="meta">Feb 26, 2022</p>
+  </header>
+
+  <article class="post-content">
+  <h2 id="summary">Summary</h2>
+
+<p>This post contains a detailed discussion on the following points:</p>
+
+<ul>
+  <li>CPUs are latency oriented while GPUs are throughput oriented devices.</li>
+  <li>Linear layout of bytes in RAM.</li>
+  <li>There’s a unique address associated with each byte in RAM.</li>
+  <li>Pointer stores the address of an object.</li>
+  <li>Pointer is necessary to declare a dynamic array.</li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>The graphics processing unit, or GPU, has become one of the most important types of computing technology. Although they’re best known for their capabilities in gaming or mining crypto-currencies, GPUs are becoming more popular for use in Creative Production, Artificial Intelligence (AI) and Scientific Computing. Broadly speaking, GPUs are known to have large number of processing units but there are a few other things that distinguish a GPU from a CPU. Understanding the strengths and weaknesses of GPUs is crucial in leveraging their power and <em>an efficient high performance computer program must make use of both CPU and GPU</em>.</p>
+
+<p>Here are a few points of difference between a CPU and a GPU:</p>
+
+<ul>
+  <li>CPUs have powerful ALUs to reduce latency, while GPUs have efficient but large number of ALUs to maximize throughput.</li>
+  <li>CPUs use large caches to store data close to the ALU, while GPUs don’t use caches to store data but rather a staging area for large threads.</li>
+  <li>CPUs have sophisticated control, while GPUs have simple control.</li>
+</ul>
+
+<div class="imgcap">
+<img src="https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/GPGPU_SERIES/00_Pointers/Figure_1.gif" alt="this slowpoke moves" width="800" />
+<div class="thecap">Figure 1: Differences between CPU and GPU. </div>
+</div>
+
+<!--
+<div class="imgcap">
+<img src="/assets/GPGPU_SERIES/00_Pointers/Figure_5.png">
+<div class="thecap">Figure 1: Differences between CPU and GPU. </div>
+</div> -->
+
+<p><strong>General-purpose computing on graphics processing units</strong> (<strong>GPGPU</strong>) is the use of a <a href="https://en.wikipedia.org/wiki/Graphics_processing_unit">graphics processing unit</a> (GPU), which typically handles computation only for <a href="https://en.wikipedia.org/wiki/Computer_graphics">computer graphics</a>, to perform computation in applications traditionally handled by the <a href="https://en.wikipedia.org/wiki/Central_processing_unit">central processing unit</a> (CPU).</p>
+
+<p>Before studying GPUs, it’s important to know how CPU perform computations.</p>
+
+<h2 id="memory-ram-in-modern-computers">Memory (RAM) in modern computers</h2>
+
+<p>Arrays are the most frequently used data structures when it comes to High Performance Computing. Whenever an array is declared, it’s elements are stored in the system RAM in a specific manner. Before diving into arrays, it’s important to understand how memory systems work in a modern computer.</p>
+
+<p>RAM can be viewed as an array of bytes with a unique address for each location as shown in <em>Figure 2</em>.</p>
+
+<div class="imgcap">
+<img src="https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/GPGPU_SERIES/00_Pointers/Figure_2.gif" alt="this slowpoke moves" width="800" />
+<div class="thecap">Figure 2: Memory layout in modern computer. </div>
+</div>
+
+<h2 id="introduction-to-pointers">Introduction to Pointers</h2>
+
+<p>Different data types take up different amount of space in the memory, for example an <em>integer</em> takes up 4 bytes and a double takes up 8 bytes. So when we declare <code class="language-plaintext highlighter-rouge">int a = 4</code>  in a program, it’s stored in the memory where it takes up 4 <em>consecutive</em> bytes (shown by highlighted section in <em>Figure 3</em>).</p>
+
+<div class="imgcap">
+<img src="https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/GPGPU_SERIES/00_Pointers/Figure_3.gif" alt="this slowpoke moves" width="800" />
+<div class="thecap">Figure 3: 4 bytes occupied by variable in RAM with starting location at 102. </div>
+</div>
+
+<p><strong>A pointer is an object that contains a memory address.</strong> Very often this address is the location of another object such as variable. The general form of a pointer variable declaration is <code class="language-plaintext highlighter-rouge">type *var_name</code>. The base type of a pointer determines what type of data the pointer will be pointing to.</p>
+
+<h3 id="pointer-operators">Pointer Operators</h3>
+
+<p>Continuing the example used above, if we want <code class="language-plaintext highlighter-rouge">ptr</code> to points to integer <code class="language-plaintext highlighter-rouge">a</code>, i.e. store the address of integer variable <code class="language-plaintext highlighter-rouge">a</code>, we first have to define it with type <code class="language-plaintext highlighter-rouge">int</code> (line 2 of code in <em>Figure 4</em>). Now that we have defined a pointer, there are two special operators that are used with pointers to perform different tasks.</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">&amp;</code>: Returns the memory address of it’s operand. In line 3 of <em>Figure 4</em>, <code class="language-plaintext highlighter-rouge">&amp;</code> retrieves the address at which variable <code class="language-plaintext highlighter-rouge">a</code> is stored in memory and puts that in the pointer <code class="language-plaintext highlighter-rouge">ptr</code>.</p>
+
+    <p><em>We know that variable <code class="language-plaintext highlighter-rouge">a</code> is stored in 4 locations, so which address value is retrieved by <code class="language-plaintext highlighter-rouge">&amp;</code> operator?</em></p>
+
+    <p>The answer to this is that it returns the address at which the variable starts (i.e. in <em>Figure 4</em> it’s location number 102).</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">*</code>: It’s compliment of <code class="language-plaintext highlighter-rouge">&amp;</code> and returns the value of the variable located at the address specified by its operand. Line 4 in <em>Figure 4</em> puts 4 in the variable <code class="language-plaintext highlighter-rouge">val</code>.</p>
+
+    <p><em>At this point, <code class="language-plaintext highlighter-rouge">ptr</code> only contains the location 102, but to form the integer 4, data at locations 103, 104 and 105 is also required. So how does a computer figure this out?</em></p>
+
+    <p>From the type of a pointer (<code class="language-plaintext highlighter-rouge">int</code> in this case), a compiler knows how many <em>consecutive</em> locations it has to access in order to provide the correct value.</p>
+
+    <p>This operator can also be used to assign values to a variable.</p>
+
+    <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+<span class="kt">int</span> <span class="o">*</span><span class="n">ptr</span><span class="p">;</span>
+
+<span class="n">ptr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">;</span> <span class="c1">// ptr assigned address of x</span>
+
+<span class="o">*</span><span class="n">ptr</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span> <span class="c1">// x assigned value 123</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">ptr</span><span class="p">)</span><span class="o">++</span><span class="p">;</span> <span class="c1">// Increments x by 1;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">// Prints 124</span>
+
+<span class="p">(</span><span class="o">*</span><span class="n">ptr</span><span class="p">)</span><span class="o">--</span><span class="p">;</span> <span class="c1">// Decrements x by 1;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> <span class="c1">// Prints 123</span>
+
+<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</code></pre></div>    </div>
+
+    <div class="imgcap">
+<img src="https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/GPGPU_SERIES/00_Pointers/Figure_4.gif" alt="this slowpoke moves" width="800" />
+<div class="thecap">Figure 4: Declaring and using a pointer.</div>
+</div>
+  </li>
+</ul>
+
+<p><strong>The base type of a pointer is important</strong>. Pointer with base type <code class="language-plaintext highlighter-rouge">int</code> can only hold address of <code class="language-plaintext highlighter-rouge">int</code> variable. We can <em>cast</em> the type to get rid of the error but that will lead to different problems.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+<span class="kt">double</span> <span class="n">f</span><span class="p">;</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">;</span> <span class="c1">// ERROR!</span>
+</code></pre></div></div>
+
+<h2 id="pointers-and-arrays">Pointers and Arrays</h2>
+
+<p>In C++. there’s a close relationship between arrays and pointers. When an array <code class="language-plaintext highlighter-rouge">arr</code> is declared (<code class="language-plaintext highlighter-rouge">int arr[10]</code>), and the name is used without index, it returns a pointer that points to the 1st element of the array. Let’s look at an example where we define an array with two elements. A pointer can then be used to access or manipulate the defined array as follows</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">arr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">};</span> <span class="c1">// Defining array</span>
+<span class="kt">int</span> <span class="o">*</span><span class="n">ptr</span><span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// Initialising pointer</span>
+<span class="n">ptr</span> <span class="o">=</span> <span class="n">arr</span><span class="p">;</span> <span class="c1">// Pointer now points to 1st element of array</span>
+</code></pre></div></div>
+
+<p>We can now perform arithmetic operations on elements of array using pointer. Note that now we can use pointer and array interchangeably, hence <code class="language-plaintext highlighter-rouge">*(ptr+i)</code> will skip 3 locations and point to the next element of the array.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="o">*</span><span class="p">(</span><span class="n">ptr</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span> <span class="c1">// Adding 1 to each element</span>
+
+<span class="c1">// Printing array</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">*(ptr+i)</code> is equivalent to <code class="language-plaintext highlighter-rouge">ptr[i]</code>.</p>
+</blockquote>
+
+<p>The above code gives the following output.</p>
+
+<div class="language-terminal highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">4
+5
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>C++ allows two ways to access arrays, and using pointers is usually faster as compiler generates different code and mostly indexing operator has an overhead.</p>
+</blockquote>
+
+<h2 id="multidimensional-arrays">Multidimensional Arrays</h2>
+
+<p>As the memory layout in a computer is linear, all multidimensional arrays are flattened to 1D and then stored. Let’s consider an example of a 2D array with 2 rows and 2 columns. C++ uses row major layout, i.e. different rows are stacked one after the other to make a long 1D array as shown in <em>Figure 5</em>.</p>
+
+<div class="imgcap">
+<img src="https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/GPGPU_SERIES/00_Pointers/Figure_5.gif" alt="this slowpoke moves" width="800" />
+<div class="thecap">Figure 5: Linear layout of 2D array in memory. </div>
+</div>
+
+<p>We can use similar technique to define a flattened 2D array (dynamic) in C++. Dynamic array is an array that can adjust it’s size during runtime. It’s memory space is allocated during runtime and is located in heap. To create a dynamic array we need a pointer variable and then use <code class="language-plaintext highlighter-rouge">new</code> to allocate space in the heap.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="o">*</span><span class="n">arr</span><span class="p">;</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span> <span class="c1">// Allocate space for 4 integer variables</span>
+<span class="n">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="c1">// arr[0][0]</span>
+<span class="n">arr</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">// arr[0][1]</span>
+<span class="n">arr</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="c1">// arr[1][0]</span>
+<span class="n">arr</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="c1">// arr[1][1]</span>
+</code></pre></div></div>
+
+<p>After we’re done using this dynamic array it’s <strong>crucial</strong> to delete it and free the space as follows.</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">delete</span> <span class="p">[]</span> <span class="n">arr</span><span class="p">;</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>There is a way to create 2D dynamic arrays via <em>pointer of pointer</em>, but that doesn’t work well for GPGPU programming.</p>
+</blockquote>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<ul>
+  <li>
+    <p>CPUs and GPUs have very different architecture.</p>
+  </li>
+  <li>
+    <p>Pointers are really powerful when it comes to manipulating data stored in the memory.</p>
+  </li>
+  <li>
+    <p>In C/C++, Pointers and Arrays go hand in hand.</p>
+  </li>
+  <li>
+    <p>Pointers provide the way to create dynamic arrays.</p>
+  </li>
+  <li>
+    <p>All modern programs must use the combination of CPUs and GPUs.</p>
+  </li>
+</ul>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="https://www.intel.com/content/www/us/en/products/docs/processors/what-is-a-gpu.html">Link to intel website</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units">Link to Wikipedia</a></li>
+</ul>
+
+  </article>
+
+  <!-- mathjax -->
+  
+  
+  <!-- disqus comments -->
+ 
+  
+</div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <!-- <h2 class="footer-heading">Computational Science and Engineering</h2> -->
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li>Computational Science and Engineering</li>
+        <!-- <li><a href="mailto:[first_name(without caps)].[last_name(without caps)][at]utah.edu">[first_name(without caps)].[last_name(without caps)][at]utah.edu</a></li> -->
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        <li>
+          <a href="https://github.com/tgautam03">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+            </span>
+            <span class="username">tgautam03</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text">Everything High Performance</p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    </body>
+</html>
+
+<script type="text/javascript">
+window.MathJax = {
+  tex: {
+    packages: ['base', 'ams']
+  },
+  loader: {
+    load: ['ui/menu', '[tex]/ams']
+  }
+};
+</script>
+
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Four Special Matrices</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Everything High Performance">
+    <link rel="canonical" href="http://localhost:4000/2023/09/11/Four-Special-Matrices/">
+    <link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Computational Science and Engineering posts" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+
+    <!-- Google Analytics -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-3698471-23', 'auto');
+      ga('send', 'pageview');
+    </script>
+
+</head>
+
+
+    <body>
+
+    <header class="site-header">
+
+  <div class="wrap">
+
+    <div style="float:left; margin-top:10px; margin-right:10px;">
+    <a href="/feed.xml">
+      <img src="/assets/rssicon.svg" width="40">
+    </a>
+    </div>
+
+    <a class="site-title" href="/">Computational Science and Engineering</a>
+    
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 18 15" enable-background="new 0 0 18 15" xml:space="preserve">
+          <path fill="#505050" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0
+            h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#505050" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484
+            h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#505050" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0
+            c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+      <div class="trigger">
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrap">
+      <div class="post">
+
+  <header class="post-header">
+    <h1>Four Special Matrices</h1>
+    <p class="meta">Sep 11, 2023</p>
+  </header>
+
+  <article class="post-content">
+  <h2 id="introduction">Introduction</h2>
+<p>Consider a matrix, \(K_4=\begin{pmatrix}2 &amp; -1 &amp; 0 &amp; 0\\\ -1 &amp; 2 &amp; -1 &amp; 0 \\\ 0 &amp; -1 &amp; 2 &amp; -1 \\\ 0 &amp; 0 &amp; -1 &amp; 2 \\\ \end{pmatrix}\).</p>
+
+<p>What are the special properties of this matrix?</p>
+<ul>
+  <li><strong>Symmetric</strong>: \(K=K^T\)</li>
+  <li><strong>Sparse (Tridiagonal)</strong>: The point on sparsity is especially true when matrix K is something like \(100 \times 100\)</li>
+  <li><strong>Toeplitz</strong>: Constant diagonals, i.e. we have \(2\) and \(-1\) across the diagonals</li>
+  <li><strong>Invertible</strong>: Identifying that a matrix is invertible, is crucial to solving a system of equations. The standard way to find out if a matrix is invertible, is to row reduce it and represent it in upper triangular form. Let’s see how to do that.</li>
+</ul>
+
+<h2 id="row-reduction">Row Reduction</h2>
+<p>Using the same \(K_4\) matrix discussed in the previous section,</p>
+
+<ul>
+  <li>
+    <p>Picking the first column, where the pivot is \(k_{11}\) element. We make all the elements below the pivot, zero by performing row reduction operation \(R_2 \rightarrow R_2 - (k_{11}/k_{21})R_1\).\(\)K_4=\begin{pmatrix} 2 &amp; -1 &amp; 0 &amp; 0\ 0 &amp; 3/2 &amp; -1 &amp; 0 \ 0 &amp; -1 &amp; 2 &amp; -1 \ 0 &amp; 0 &amp; -1 &amp; 2 \ \end{pmatrix}\(\)</p>
+  </li>
+  <li>
+    <p>Next, move onto the 2nd column and again ensure that all elements below the pivot \(k_{22}\) are zero by performing the row reduction operation \(R_3 \rightarrow R_3 - (k_{22}/k_{32})R_2\).</p>
+
+\[K_4= \begin{pmatrix} 2 &amp; -1 &amp; 0 &amp; 0\\ 0 &amp; 3/2 &amp; -1 &amp; 0 \\ 0 &amp; 0 &amp; 4/3 &amp; -1 \\ 0 &amp; 0 &amp; -1 &amp; 2 \\ \end{pmatrix}\]
+  </li>
+  <li>
+    <p>Do the same thing for the 3rd column, \(R_4 \rightarrow R_4 - (k_{33}/k_{43})R_3\).
+\(K_4= \begin{pmatrix} 2 &amp; -1 &amp; 0 &amp; 0\\ 0 &amp; 3/2 &amp; -1 &amp; 0 \\ 0 &amp; 0 &amp; 4/3 &amp; -1 \\ 0 &amp; 0 &amp; 0 &amp; 5/4 \\ \end{pmatrix}\)</p>
+  </li>
+  <li>
+    <p>For the final column, there’s nothing below the pivot value.</p>
+  </li>
+</ul>
+
+<p>We now have \(K_4\) reduced to the upper triangular form and the simple test of invertibility is to check if all pivots are non-zero. If they’re non-zero, then the matrix is invertible.</p>
+
+<blockquote>
+  <p>[!WARNING]
+Don’t touch determinants when dealing with invertibility! Any numerical methods library will evaluate determinants this way by first converting the matrix into an upper triangular form and then taking the product of the diagonal elements. In this case, the determinant is \(5\)!</p>
+</blockquote>
+
+<h2 id="github-actions">GitHub Actions</h2>
+<p><strong>GitHub Actions</strong> can automatically run tests and documenter everytime I push code to the GitHub Repository.</p>
+
+<p>To do this, first create <em>.github/</em> folder with <em>Documenter.yml</em> and <em>Runtests.yml</em> files (these are the config files for GitHub actions):</p>
+
+<p><em>Documenter.yml</em></p>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">name</span><span class="pi">:</span> <span class="s">Documenter</span>
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">push</span><span class="pi">:</span>
+    <span class="na">branches</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">master</span>
+    <span class="na">tags</span><span class="pi">:</span> <span class="s1">'</span><span class="s">*'</span>
+  <span class="na">pull_request</span><span class="pi">:</span>
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">build</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span> <span class="c1"># OS Support</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">julia-actions/setup-julia@latest</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">version</span><span class="pi">:</span> <span class="s1">'</span><span class="s">1.8.3'</span> <span class="c1"># Julia Version</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Install dependencies</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="s">julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build and deploy</span>
+        <span class="na">env</span><span class="pi">:</span>
+          <span class="na">GITHUB_TOKEN</span><span class="pi">:</span> <span class="s">$</span> <span class="c1"># For authentication with GitHub Actions token</span>
+          <span class="na">DOCUMENTER_KEY</span><span class="pi">:</span> <span class="s">$</span> <span class="c1"># For authentication with SSH deploy key</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="s">julia --project=docs/ docs/make.jl</span>
+</code></pre></div></div>
+
+<p><em>Runtests.yml</em></p>
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">name</span><span class="pi">:</span> <span class="s">Runtests</span>
+<span class="na">on</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">push</span><span class="pi">,</span> <span class="nv">pull_request</span><span class="pi">]</span>
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">test</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">$</span>
+    <span class="na">strategy</span><span class="pi">:</span>
+      <span class="na">matrix</span><span class="pi">:</span>
+        <span class="na">julia-version</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">1.8.3'</span><span class="pi">]</span> <span class="c1"># Julia Version</span>
+        <span class="na">julia-arch</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">x64</span><span class="pi">]</span> <span class="c1"># 64 bit Architecture Support</span>
+        <span class="na">os</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">macOS-latest</span><span class="pi">,</span> <span class="nv">ubuntu-latest</span><span class="pi">]</span> <span class="c1"># OS Support</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v2</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">julia-actions/setup-julia@latest</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">version</span><span class="pi">:</span> <span class="s">$</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">julia-actions/julia-buildpkg@latest</span>
+      <span class="pi">-</span> <span class="na">uses</span><span class="pi">:</span> <span class="s">julia-actions/julia-runtest@latest</span>
+</code></pre></div></div>
+
+<p>Package Structure:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jac/
+├─ .git/
+├─ .github/
+│  └─ workflows/
+│     ├─ Documenter.yml
+│     └─ Runtests.yml
+├─ docs/
+│  ├─ src/
+│  │  ├─ Development
+│  │  |     ├─
+│  |  ├─ Examples
+│  │  |     ├─
+│  │  └─ index.md
+│  ├─ Project.toml
+│  └─ make.jl
+├─ src/
+│  └─ jac.jl
+├─ test/
+│  └─ runtests.jl
+├─ .gitignore
+├─ LICENSE
+├─ Project.toml
+└─ README.md
+</code></pre></div></div>
+
+<p>Now, I have to deploy keys for GitHub Actions. First, generate the keys using <code class="language-plaintext highlighter-rouge">DocumenterTools</code> package:</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>julia&gt; DocumenterTools.genkeys<span class="o">()</span>
+┌ Info: add the public key below to https://github.com/<span class="nv">$USER</span>/<span class="nv">$REPO</span>/settings/keys with <span class="nb">read </span>and write access
+└ the title can be left empty as GitHub can infer it from the key comment
+
+ssh-rsa WILL HAVE KEY HERE Documenter
+
+<span class="o">[</span> Info: add a secure environment variable named <span class="s1">'DOCUMENTER_KEY'</span> to https://travis-ci.com/<span class="nv">$USER</span>/<span class="nv">$REPO</span>/settings <span class="o">(</span><span class="k">if </span>you deploy using Travis CI<span class="o">)</span> or https://github.com/<span class="nv">$USER</span>/<span class="nv">$REPO</span>/settings/secrets <span class="o">(</span><span class="k">if </span>you deploy using GitHub Actions<span class="o">)</span> with value:
+
+WILL HAVE KEY HERE
+</code></pre></div></div>
+
+<p>Follows the next steps:</p>
+<ul>
+  <li>
+    <p>Copy the ssh key (starting with <code class="language-plaintext highlighter-rouge">ssh-rsa</code>) in <strong>Settings/Deploy keys</strong> on the GitHub repository’s website (figure below for details)</p>
+
+    <div class="imgcap">
+  <img src="https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/2022-12-23-Julia_packages/DocumenterKey.png" alt="this slowpoke moves" width="800" />
+  <div class="thecap">Figure 1: Adding Documenter Key to GitHub.</div>
+  </div>
+  </li>
+  <li>
+    <p>Copy the secret key in <strong>Settings/Secrets/Actions</strong> on the GitHub repository’s website (figure below for details)</p>
+
+    <div class="imgcap">
+  <img src="https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/2022-12-23-Julia_packages/Secret.png" alt="this slowpoke moves" width="800" />
+  <div class="thecap">Figure 2: Adding Secret Key to GitHub.</div>
+  </div>
+  </li>
+</ul>
+
+<p>One last thing before pushing the changes to remote repository, we have to modify <em>docs/make.jl</em> file to include the URL to the GitHub repository:</p>
+<div class="language-julia highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="n">Documenter</span>
+<span class="k">using</span> <span class="n">jac</span>
+
+<span class="n">makedocs</span><span class="x">(</span>
+    <span class="n">sitename</span> <span class="o">=</span> <span class="s">"jac"</span><span class="x">,</span>
+    <span class="n">format</span> <span class="o">=</span> <span class="n">Documenter</span><span class="o">.</span><span class="kt">HTML</span><span class="x">(),</span>
+    <span class="n">modules</span> <span class="o">=</span> <span class="x">[</span><span class="n">jac</span><span class="x">]</span>
+<span class="x">)</span>
+
+<span class="c"># Documenter can also automatically deploy documentation to gh-pages.</span>
+<span class="c"># See "Hosting Documentation" and deploydocs() in the Documenter manual</span>
+<span class="c"># for more information.</span>
+<span class="n">deploydocs</span><span class="x">(</span>
+    <span class="n">repo</span> <span class="o">=</span> <span class="s">"github.com/tgautam03/jac.git"</span> <span class="c"># URL to Repo</span>
+<span class="x">)</span>
+</code></pre></div></div>
+
+<p>Now, push the changes to GitHub.</p>
+
+<h2 id="final-touches">Final Touches</h2>
+<p>In the remote repository, I can now see the Tests and Documenter running inside <em>Actions</em> tab. I can also add <strong>Badges</strong> so that I don’t have to look inside <em>Actions</em> tab every time to check the status (this is done inside <em>Actions/Documenter</em> and <em>Actions/Runtests</em> using triple dots on the top right corner).</p>
+
+<p>Once the documentation is deployed, I can check the URL on GitHub Repo itself (in my case it’s https://tgautam03.github.io/jac/dev/).</p>
+
+<h2 id="references">References</h2>
+<ul>
+  <li><a href="https://jaantollander.com/post/how-to-create-software-packages-with-julia-language/">Jaan’s blog post</a></li>
+</ul>
+
+  </article>
+
+  <!-- mathjax -->
+  
+  
+  <!-- disqus comments -->
+ 
+  
+</div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrap">
+
+    <!-- <h2 class="footer-heading">Computational Science and Engineering</h2> -->
+
+    <div class="footer-col-1 column">
+      <ul>
+        <li>Computational Science and Engineering</li>
+        <!-- <li><a href="mailto:[first_name(without caps)].[last_name(without caps)][at]utah.edu">[first_name(without caps)].[last_name(without caps)][at]utah.edu</a></li> -->
+      </ul>
+    </div>
+
+    <div class="footer-col-2 column">
+      <ul>
+        <li>
+          <a href="https://github.com/tgautam03">
+            <span class="icon github">
+              <svg version="1.1" class="github-icon-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+                <path fill-rule="evenodd" clip-rule="evenodd" fill="#C2C2C2" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761
+                c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32
+                c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472
+                c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037
+                C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65
+                c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261
+                c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082
+                c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129
+                c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+            </span>
+            <span class="username">tgautam03</span>
+          </a>
+        </li>
+        
+      </ul>
+    </div>
+
+    <div class="footer-col-3 column">
+      <p class="text">Everything High Performance</p>
+    </div>
+
+  </div>
+
+</footer>
+
+
+    </body>
+</html>
+
+<script type="text/javascript">
+window.MathJax = {
+  tex: {
+    packages: ['base', 'ams']
+  },
+  loader: {
+    load: ['ui/menu', '[tex]/ams']
+  }
+};
+</script>
+
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script>
