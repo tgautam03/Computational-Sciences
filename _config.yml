@@ -8,6 +8,7 @@ url: "http://tgautam03.github.io/"
 github_username:  tgautam03
 
 # Build settings
+# remote_theme: pdmosses/just-the-docs@combination-rec-nav
 markdown: kramdown
 permalink: pretty
 

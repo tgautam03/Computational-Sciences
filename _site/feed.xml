@@ -3,11 +3,11 @@
   <channel>
     <title>Computational Science and Engineering</title>
     <description>Everything High Performance</description>
-    <link>http://localhost:4000/</link>
-    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 19 Sep 2023 22:16:53 -0600</pubDate>
-    <lastBuildDate>Tue, 19 Sep 2023 22:16:53 -0600</lastBuildDate>
-    <generator>Jekyll v4.2.1</generator>
+    <link>http://localhost:4000/Computational-Sciences/</link>
+    <atom:link href="http://localhost:4000/Computational-Sciences/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Tue, 19 Sep 2023 22:56:41 -0600</pubDate>
+    <lastBuildDate>Tue, 19 Sep 2023 22:56:41 -0600</lastBuildDate>
+    <generator>Jekyll v4.2.2</generator>
     
       <item>
         <title>Four Special Matrices</title>
@@ -26,17 +26,21 @@
 &lt;p&gt;Using the same \(K_4\) matrix discussed in the previous section,&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Picking the first column, where the pivot is \(k_{11}\) element. We make all the elements below the pivot, zero by performing row reduction operation \(R_2 \rightarrow R_2 - (k_{11}/k_{21})R_1\).\(\)K_4=\begin{pmatrix} 2 &amp;amp; -1 &amp;amp; 0 &amp;amp; 0\ 0 &amp;amp; 3/2 &amp;amp; -1 &amp;amp; 0 \ 0 &amp;amp; -1 &amp;amp; 2 &amp;amp; -1 \ 0 &amp;amp; 0 &amp;amp; -1 &amp;amp; 2 \ \end{pmatrix}\(\)&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;Picking the first column, where the pivot is \(k_{11}\) element. We make all the elements below the pivot, zero by performing row reduction operation \(R_2 \rightarrow R_2 - (k_{11}/k_{21})R_1\).&lt;/li&gt;
+&lt;/ul&gt;
+
+\[K_4=\begin{pmatrix} 2 &amp;amp; -1 &amp;amp; 0 &amp;amp; 0\\ 0 &amp;amp; 3/2 &amp;amp; -1 &amp;amp; 0 \\ 0 &amp;amp; -1 &amp;amp; 2 &amp;amp; -1 \\ 0 &amp;amp; 0 &amp;amp; -1 &amp;amp; 2 \\ \end{pmatrix}\]
+
+&lt;ul&gt;
   &lt;li&gt;
     &lt;p&gt;Next, move onto the 2nd column and again ensure that all elements below the pivot \(k_{22}\) are zero by performing the row reduction operation \(R_3 \rightarrow R_3 - (k_{22}/k_{32})R_2\).&lt;/p&gt;
 
 \[K_4= \begin{pmatrix} 2 &amp;amp; -1 &amp;amp; 0 &amp;amp; 0\\ 0 &amp;amp; 3/2 &amp;amp; -1 &amp;amp; 0 \\ 0 &amp;amp; 0 &amp;amp; 4/3 &amp;amp; -1 \\ 0 &amp;amp; 0 &amp;amp; -1 &amp;amp; 2 \\ \end{pmatrix}\]
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Do the same thing for the 3rd column, \(R_4 \rightarrow R_4 - (k_{33}/k_{43})R_3\).
-\(K_4= \begin{pmatrix} 2 &amp;amp; -1 &amp;amp; 0 &amp;amp; 0\\ 0 &amp;amp; 3/2 &amp;amp; -1 &amp;amp; 0 \\ 0 &amp;amp; 0 &amp;amp; 4/3 &amp;amp; -1 \\ 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 5/4 \\ \end{pmatrix}\)&lt;/p&gt;
+    &lt;p&gt;Do the same thing for the 3rd column, \(R_4 \rightarrow R_4 - (k_{33}/k_{43})R_3\).&lt;/p&gt;
+
+\[K_4= \begin{pmatrix} 2 &amp;amp; -1 &amp;amp; 0 &amp;amp; 0\\ 0 &amp;amp; 3/2 &amp;amp; -1 &amp;amp; 0 \\ 0 &amp;amp; 0 &amp;amp; 4/3 &amp;amp; -1 \\ 0 &amp;amp; 0 &amp;amp; 0 &amp;amp; 5/4 \\ \end{pmatrix}\]
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;For the final column, there’s nothing below the pivot value.&lt;/p&gt;
@@ -45,9 +49,10 @@
 
 &lt;p&gt;We now have \(K_4\) reduced to the upper triangular form and the simple test of invertibility is to check if all pivots are non-zero. If they’re non-zero, then the matrix is invertible.&lt;/p&gt;
 
+&lt;!-- {: .note-title } --&gt;
+&lt;!-- {: .info } --&gt;
 &lt;blockquote&gt;
-  &lt;p&gt;[!WARNING]
-Don’t touch determinants when dealing with invertibility! Any numerical methods library will evaluate determinants this way by first converting the matrix into an upper triangular form and then taking the product of the diagonal elements. In this case, the determinant is \(5\)!&lt;/p&gt;
+  &lt;p&gt;Don’t touch determinants when dealing with invertibility! Any numerical methods library will evaluate determinants this way by first converting the matrix into an upper triangular form and then taking the product of the diagonal elements. In this case, the determinant is \(5\)!&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;h2 id=&quot;github-actions&quot;&gt;GitHub Actions&lt;/h2&gt;
@@ -189,8 +194,8 @@ WILL HAVE KEY HERE
 &lt;/ul&gt;
 </description>
         <pubDate>Mon, 11 Sep 2023 04:00:00 -0600</pubDate>
-        <link>http://localhost:4000/2023/09/11/Four-Special-Matrices/</link>
-        <guid isPermaLink="true">http://localhost:4000/2023/09/11/Four-Special-Matrices/</guid>
+        <link>http://localhost:4000/Computational-Sciences/2023/09/11/Four-Special-Matrices/</link>
+        <guid isPermaLink="true">http://localhost:4000/Computational-Sciences/2023/09/11/Four-Special-Matrices/</guid>
         
         
       </item>
@@ -246,8 +251,8 @@ WILL HAVE KEY HERE
 &lt;/ul&gt;
 </description>
         <pubDate>Sun, 13 Nov 2022 02:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2022/11/13/Github_Pages/</link>
-        <guid isPermaLink="true">http://localhost:4000/2022/11/13/Github_Pages/</guid>
+        <link>http://localhost:4000/Computational-Sciences/2022/11/13/Github_Pages/</link>
+        <guid isPermaLink="true">http://localhost:4000/Computational-Sciences/2022/11/13/Github_Pages/</guid>
         
         
       </item>
@@ -456,8 +461,8 @@ WILL HAVE KEY HERE
 &lt;/ul&gt;
 </description>
         <pubDate>Sat, 26 Feb 2022 14:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2022/02/26/PointersRefresher/</link>
-        <guid isPermaLink="true">http://localhost:4000/2022/02/26/PointersRefresher/</guid>
+        <link>http://localhost:4000/Computational-Sciences/2022/02/26/PointersRefresher/</link>
+        <guid isPermaLink="true">http://localhost:4000/Computational-Sciences/2022/02/26/PointersRefresher/</guid>
         
         
       </item>
@@ -800,8 +805,8 @@ Function Gradient: 6
 
 </description>
         <pubDate>Sat, 20 Nov 2021 16:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2021/11/20/AutoDiffForward/</link>
-        <guid isPermaLink="true">http://localhost:4000/2021/11/20/AutoDiffForward/</guid>
+        <link>http://localhost:4000/Computational-Sciences/2021/11/20/AutoDiffForward/</link>
+        <guid isPermaLink="true">http://localhost:4000/Computational-Sciences/2021/11/20/AutoDiffForward/</guid>
         
         
       </item>
@@ -988,8 +993,8 @@ sol = 3.1677063269057153
 &lt;/ul&gt;
 </description>
         <pubDate>Tue, 16 Nov 2021 15:00:00 -0700</pubDate>
-        <link>http://localhost:4000/2021/11/16/FiniteDiff/</link>
-        <guid isPermaLink="true">http://localhost:4000/2021/11/16/FiniteDiff/</guid>
+        <link>http://localhost:4000/Computational-Sciences/2021/11/16/FiniteDiff/</link>
+        <guid isPermaLink="true">http://localhost:4000/Computational-Sciences/2021/11/16/FiniteDiff/</guid>
         
         
       </item>
@@ -1292,8 +1297,8 @@ Suppose our cache has 5 lines where each line can hold 4 floating point (64 bit)
 &lt;/ul&gt;
 </description>
         <pubDate>Sun, 31 Oct 2021 16:00:00 -0600</pubDate>
-        <link>http://localhost:4000/2021/10/31/CacheBasics/</link>
-        <guid isPermaLink="true">http://localhost:4000/2021/10/31/CacheBasics/</guid>
+        <link>http://localhost:4000/Computational-Sciences/2021/10/31/CacheBasics/</link>
+        <guid isPermaLink="true">http://localhost:4000/Computational-Sciences/2021/10/31/CacheBasics/</guid>
         
         
       </item>
