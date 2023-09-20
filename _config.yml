@@ -1,9 +1,9 @@
 # Site settings
-title: Monograph
+title: Computational Sciences
 email: "[first_name(without caps)].[last_name(without caps)][at]utah.edu"
 description: "Everything High Performance"
 baseurl: ""
-url: "http://tgautam03.github.io"
+url: "http://tgautam03.github.io/Computational-Sciences/"
 #twitter_username:
 github_username:  tgautam03
 
