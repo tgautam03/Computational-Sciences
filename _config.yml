@@ -2,8 +2,8 @@
 title: Computational Science and Engineering
 email: "[first_name(without caps)].[last_name(without caps)][at]utah.edu"
 description: "Everything High Performance"
-baseurl: ""
-url: "http://tgautam03.github.io/Computational-Sciences/"
+baseurl: "/Computational-Sciences"
+url: "http://tgautam03.github.io/"
 #twitter_username:
 github_username:  tgautam03
 
