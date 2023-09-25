@@ -11,7 +11,7 @@ date:   2023-09-20 10:00:00
 Consider a scenario where a *thin, insulated* metal rod is put on an *infinite block of ice at both ends* and a *blowtorch* is heating it along it's length (see Figure 1). The task is to find the temperature at several locations along the bar when it reaches steady state (i.e. when there's no change in temperature of the rod with time).
 
 <div class="imgcap">
-  <img src="https://raw.githubusercontent.com/tgautam03/Computational-Sciences/gh-pages/assets/2023-09-11-Four-Special-Matrices/K4.png" alt="this slowpoke moves"  width="800"/>
+  <img src="https://raw.githubusercontent.com/tgautam03/Computational-Sciences/gh-pages/assets/2023-09-20-Differential-Difference-Equations/Figure1.png" alt="this slowpoke moves"  width="800"/>
   <div class="thecap">Figure 1: A thin metal rod with both ends attached to ice blocks and blowtorch heating it. </div>
 </div>
 
@@ -66,7 +66,30 @@ $$
 \end{aligned} \tag{5}
 $$
 
+Finally, subtracting Equation $(3)$ from Equation $(2)$, we can get the *Centered Difference Approximation* to the 1st order derivative
+
+$$
+\begin{aligned}
+\frac{u(x+h) -  u(x-h)}{2h} & = u'(x) + \frac{2h^2}{3!}u'''(x) + \cdots \\
+                        & = u'(x) + \mathcal{O}(h^2) 
+\end{aligned} \tag{6}
+$$
+
+> *Centered Difference* is 2nd order Accurate in $h$ while others are 1st order Accurate in $h$!
+
+We can also add Equations $(2)$ and $(3)$, to get an approximation to 2nd order derivative
+
+$$
+\begin{aligned}
+\frac{u(x+h) - 2u(x) +  u(x-h)}{h^2} & = u''(x) + \frac{2h^2}{4!}u''''(x) + \cdots \\
+                        & = u''(x) + \mathcal{O}(h^2) 
+\end{aligned} \tag{7}
+$$
+
+> 2nd order derivative is by default 2nd order accurate in $h$!
+
 ## Difference Equation
+The next step is to use the above defined equations $(2)$ through $(7)$ and convert the *Differential Equation* to a *Difference Equation*. For this, we need **numerical descretisation**. 
 
 ### Numerical Discretisation
 
