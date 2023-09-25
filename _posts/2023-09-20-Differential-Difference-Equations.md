@@ -48,7 +48,7 @@ $$
 u(x-h) = u(x) - h u'(x) + \frac{h^2}{2!}u''(x) - \frac{h^3}{3!}u'''(x) + \cdots \tag{3}
 $$
 
-Rearranging Equation $(2)$, we can get the *Forward Difference Approximation* to the 1st order derivative
+Rearranging Equation $$(2)$$, we can get the *Forward Difference Approximation* to the 1st order derivative
 
 $$
 \begin{aligned}
@@ -57,7 +57,7 @@ $$
 \end{aligned} \tag{4}
 $$
 
-Similarly from Equation $(3)$, we can get the *Backward Difference Approximation* to the 1st order derivative
+Similarly from Equation $$(3)$$, we can get the *Backward Difference Approximation* to the 1st order derivative
 
 $$
 \begin{aligned}
@@ -66,7 +66,7 @@ $$
 \end{aligned} \tag{5}
 $$
 
-Finally, subtracting Equation $(3)$ from Equation $(2)$, we can get the *Centered Difference Approximation* to the 1st order derivative
+Finally, subtracting Equation $$(3)$$ from Equation $$(2)$$, we can get the *Centered Difference Approximation* to the 1st order derivative
 
 $$
 \begin{aligned}
@@ -75,9 +75,9 @@ $$
 \end{aligned} \tag{6}
 $$
 
-> *Centered Difference* is 2nd order Accurate in $h$ while others are 1st order Accurate in $h$!
+> *Centered Difference* is 2nd order Accurate in $$h$$ while others are 1st order Accurate in $$h$$!
 
-We can also add Equations $(2)$ and $(3)$, to get an approximation to 2nd order derivative
+We can also add Equations $$(2)$$ and $$(3)$$, to get an approximation to 2nd order derivative
 
 $$
 \begin{aligned}
@@ -86,10 +86,10 @@ $$
 \end{aligned} \tag{7}
 $$
 
-> 2nd order derivative is by default 2nd order accurate in $h$!
+> 2nd order derivative is by default 2nd order accurate in $$h$$!
 
 ## Difference Equation
-The next step is to use the above defined equations $(2)$ through $(7)$ and convert the *Differential Equation* to a *Difference Equation*. For this, we need **numerical descretisation**. 
+The next step is to use the above defined equations $$(2)$$ through $$(7)$$ and convert the *Differential Equation* to a *Difference Equation*. For this, we need **numerical descretisation**. 
 
 ### Numerical Discretisation
 
