@@ -53,8 +53,8 @@ Rearranging Equation $(2)$, we can get the *Forward Difference Approximation* to
 $$
 \begin{aligned}
 \frac{u(x+h) -  u(x)}{h} & = u'(x) + \frac{h}{2!}u''(x) + \frac{h^2}{3!}u'''(x) + \cdots \\
-                        & = u'(x) + \mathcal{O}(h) \tag{4}
-\end{aligned}
+                        & = u'(x) + \mathcal{O}(h) 
+\end{aligned} \tag{4}
 $$
 
 Similarly from Equation $(3)$, we can get the *Backward Difference Approximation* to the 1st order derivative
@@ -62,8 +62,8 @@ Similarly from Equation $(3)$, we can get the *Backward Difference Approximation
 $$
 \begin{aligned}
 \frac{u(x) -  u(x-h)}{h} & = u'(x) - \frac{h}{2!}u''(x) + \frac{h^2}{3!}u'''(x) + \cdots \\
-                        & = u'(x) + \mathcal{O}(h) \tag{5}
-\end{aligned}
+                        & = u'(x) + \mathcal{O}(h) 
+\end{aligned} \tag{5}
 $$
 
 ## Difference Equation
