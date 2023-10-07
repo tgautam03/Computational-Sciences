@@ -92,5 +92,6 @@ $$
 The next step is to use the above defined equations $$(2)$$ through $$(7)$$ and convert the *Differential Equation* to a *Difference Equation*. For this, we need **numerical descretisation**. 
 
 ### Numerical Discretisation
+Considering the PDE in Equation $$(1)$$, where the domain lies between 0 and 1. What discretisation does is represent this continuous domain using a finite set of points. As shown in Figure 2, I'm discretising the domain into 5 equispaced points with distance $$h$$ between the two adjacent points. 
 
 ### Solution

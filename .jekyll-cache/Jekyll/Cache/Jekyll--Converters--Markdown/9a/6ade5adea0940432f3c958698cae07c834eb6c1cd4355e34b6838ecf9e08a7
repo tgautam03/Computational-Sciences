@@ -1,0 +1,89 @@
+I"�<h2 id="introduction">Introduction</h2>
+<p>Consider a scenario where a <em>thin, insulated</em> metal rod is put on an <em>infinite block of ice at both ends</em> and a <em>blowtorch</em> is heating it along it’s length (see Figure 1). The task is to find the temperature at several locations along the bar when it reaches steady state (i.e. when there’s no change in temperature of the rod with time).</p>
+
+<div class="imgcap">
+  <img src="https://raw.githubusercontent.com/tgautam03/Computational-Sciences/gh-pages/assets/2023-09-20-Differential-Difference-Equations/Figure1.png" alt="this slowpoke moves" width="800" />
+  <div class="thecap">Figure 1: A thin metal rod with both ends attached to ice blocks and blowtorch heating it. </div>
+</div>
+
+<blockquote>
+  <p>In the above description, we actually received almost all the assumptions for the problem:</p>
+  <ul>
+    <li><em>Thin</em>: It’s just a 1D problem with probably \(x\) used to denote the location along the length of the rod.</li>
+    <li><em>Insulated</em>: No energy loss due to radiation from the surface of the rod to the surroundings.</li>
+  </ul>
+</blockquote>
+
+<p>The <em>Partial Differential Equation</em> (PDE) with boundary conditions explaining this scenario is known as the <strong>Heat Equation</strong> (Steady-State in this case).</p>
+
+\[-\frac{d^2u}{dx^2}=f(x) \ \ \forall \ 0 \le x \le 1; \ \ \ \ \ \ \ \ \ \ u(0)=u(1)=0 \tag{1}\]
+
+<blockquote>
+  <p>Note that</p>
+  <ul>
+    <li>The temperature distribution along the length of the rod which ranges between 0 and 1 is given as \(u(x)\),</li>
+    <li>The source term (<em>blowtorch</em>) is defined as \(f(x)\) and,</li>
+    <li>The boundary conditions \(u(x)=u(1)=0\) represent the <em>ice block</em> at the ends.</li>
+  </ul>
+</blockquote>
+
+<blockquote>
+  <p>The complete Heat Equation is derived using conservation of heat energy and Fourier’s Law of Heat Conduction, details to which can be found in my <a href="">YouTube Video</a> or the <a href="">Blog Post</a> on this topic.</p>
+</blockquote>
+
+<h3 id="why-are-boundary-conditions-so-important">Why are <em>Boundary Conditions</em> so important?</h3>
+<p>For the time being, set \(f(x)=1\). Now looking at the differential equation, what we need is some function \(u(x)\) that satisfies \(-\frac{d^2u}{dx^2}=1\). For this simple problem, we can integrate both sides twice and get a solution \(u(x)=-\frac{1}{2}x^2 + Cx + D\) where \(C\) and \(D\) can be any constants! This is where boundary conditions \(u(0)=u(1)=0\) fix the values of \(C\), \(D\) and gives us a unique solution \(u(x)=-\frac{1}{2}x^2 + \frac{1}{2}x\).</p>
+
+<h3 id="finite-differences">Finite Differences</h3>
+<p>In order to solve the PDE on a computer, we need to find a way to represent or approximate the derivatives numerically, which is done using Finite Differences. From <em>Taylor Series</em>, we know that</p>
+
+\[u(x+h) = u(x) + h u'(x) + \frac{h^2}{2!}u''(x) + \frac{h^3}{3!}u'''(x) + \cdots \tag{2}\]
+
+<p>and</p>
+
+\[u(x-h) = u(x) - h u'(x) + \frac{h^2}{2!}u''(x) - \frac{h^3}{3!}u'''(x) + \cdots \tag{3}\]
+
+<p>Rearranging Equation \((2)\), we can get the <em>Forward Difference Approximation</em> to the 1st order derivative</p>
+
+\[\begin{aligned}
+\frac{u(x+h) -  u(x)}{h} &amp; = u'(x) + \frac{h}{2!}u''(x) + \frac{h^2}{3!}u'''(x) + \cdots \\
+                        &amp; = u'(x) + \mathcal{O}(h) 
+\end{aligned} \tag{4}\]
+
+<p>Similarly from Equation \((3)\), we can get the <em>Backward Difference Approximation</em> to the 1st order derivative</p>
+
+\[\begin{aligned}
+\frac{u(x) -  u(x-h)}{h} &amp; = u'(x) - \frac{h}{2!}u''(x) + \frac{h^2}{3!}u'''(x) + \cdots \\
+                        &amp; = u'(x) + \mathcal{O}(h) 
+\end{aligned} \tag{5}\]
+
+<p>Finally, subtracting Equation \((3)\) from Equation \((2)\), we can get the <em>Centered Difference Approximation</em> to the 1st order derivative</p>
+
+\[\begin{aligned}
+\frac{u(x+h) -  u(x-h)}{2h} &amp; = u'(x) + \frac{2h^2}{3!}u'''(x) + \cdots \\
+                        &amp; = u'(x) + \mathcal{O}(h^2) 
+\end{aligned} \tag{6}\]
+
+<blockquote>
+  <p><em>Centered Difference</em> is 2nd order Accurate in \(h\) while others are 1st order Accurate in \(h\)!</p>
+</blockquote>
+
+<p>We can also add Equations \((2)\) and \((3)\), to get an approximation to 2nd order derivative</p>
+
+\[\begin{aligned}
+\frac{u(x+h) - 2u(x) +  u(x-h)}{h^2} &amp; = u''(x) + \frac{2h^2}{4!}u''''(x) + \cdots \\
+                        &amp; = u''(x) + \mathcal{O}(h^2) 
+\end{aligned} \tag{7}\]
+
+<blockquote>
+  <p>2nd order derivative is by default 2nd order accurate in \(h\)!</p>
+</blockquote>
+
+<h2 id="difference-equation">Difference Equation</h2>
+<p>The next step is to use the above defined equations \((2)\) through \((7)\) and convert the <em>Differential Equation</em> to a <em>Difference Equation</em>. For this, we need <strong>numerical descretisation</strong>.</p>
+
+<h3 id="numerical-discretisation">Numerical Discretisation</h3>
+<p>Considering the PDE in Equation \((1)\), where the domain lies between 0 and 1. What discretisation does is represent this continuous domain using a finite set of points. As shown in Figure 2, I’m discretising the domain into 5 equispaced points with distance \(h\) between the two adjacent points.</p>
+
+<h3 id="solution">Solution</h3>
+:ET

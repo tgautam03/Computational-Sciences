@@ -5,9 +5,107 @@
     <description>Everything High Performance</description>
     <link>http://localhost:4000/Computational-Sciences/</link>
     <atom:link href="http://localhost:4000/Computational-Sciences/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 19 Sep 2023 22:56:41 -0600</pubDate>
-    <lastBuildDate>Tue, 19 Sep 2023 22:56:41 -0600</lastBuildDate>
+    <pubDate>Fri, 29 Sep 2023 16:11:46 -0600</pubDate>
+    <lastBuildDate>Fri, 29 Sep 2023 16:11:46 -0600</lastBuildDate>
     <generator>Jekyll v4.2.2</generator>
+    
+      <item>
+        <title>Differential and Difference Equations</title>
+        <description>&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Consider a scenario where a &lt;em&gt;thin, insulated&lt;/em&gt; metal rod is put on an &lt;em&gt;infinite block of ice at both ends&lt;/em&gt; and a &lt;em&gt;blowtorch&lt;/em&gt; is heating it along it’s length (see Figure 1). The task is to find the temperature at several locations along the bar when it reaches steady state (i.e. when there’s no change in temperature of the rod with time).&lt;/p&gt;
+
+&lt;div class=&quot;imgcap&quot;&gt;
+  &lt;img src=&quot;https://raw.githubusercontent.com/tgautam03/Computational-Sciences/gh-pages/assets/2023-09-20-Differential-Difference-Equations/Figure1.png&quot; alt=&quot;this slowpoke moves&quot; width=&quot;800&quot; /&gt;
+  &lt;div class=&quot;thecap&quot;&gt;Figure 1: A thin metal rod with both ends attached to ice blocks and blowtorch heating it. &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;In the above description, we actually received almost all the assumptions for the problem:&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;em&gt;Thin&lt;/em&gt;: It’s just a 1D problem with probably \(x\) used to denote the location along the length of the rod.&lt;/li&gt;
+    &lt;li&gt;&lt;em&gt;Insulated&lt;/em&gt;: No energy loss due to radiation from the surface of the rod to the surroundings.&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;The &lt;em&gt;Partial Differential Equation&lt;/em&gt; (PDE) with boundary conditions explaining this scenario is known as the &lt;strong&gt;Heat Equation&lt;/strong&gt; (Steady-State in this case).&lt;/p&gt;
+
+\[-\frac{d^2u}{dx^2}=f(x) \ \ \forall \ 0 \le x \le 1; \ \ \ \ \ \ \ \ \ \ u(0)=u(1)=0 \tag{1}\]
+
+&lt;blockquote&gt;
+  &lt;p&gt;Note that&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;The temperature distribution along the length of the rod which ranges between 0 and 1 is given as \(u(x)\),&lt;/li&gt;
+    &lt;li&gt;The source term (&lt;em&gt;blowtorch&lt;/em&gt;) is defined as \(f(x)\) and,&lt;/li&gt;
+    &lt;li&gt;The boundary conditions \(u(x)=u(1)=0\) represent the &lt;em&gt;ice block&lt;/em&gt; at the ends.&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The complete Heat Equation is derived using conservation of heat energy and Fourier’s Law of Heat Conduction, details to which can be found in my &lt;a href=&quot;&quot;&gt;YouTube Video&lt;/a&gt; or the &lt;a href=&quot;&quot;&gt;Blog Post&lt;/a&gt; on this topic.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;why-are-boundary-conditions-so-important&quot;&gt;Why are &lt;em&gt;Boundary Conditions&lt;/em&gt; so important?&lt;/h3&gt;
+&lt;p&gt;For the time being, set \(f(x)=1\). Now looking at the differential equation, what we need is some function \(u(x)\) that satisfies \(-\frac{d^2u}{dx^2}=1\). For this simple problem, we can integrate both sides twice and get a solution \(u(x)=-\frac{1}{2}x^2 + Cx + D\) where \(C\) and \(D\) can be any constants! This is where boundary conditions \(u(0)=u(1)=0\) fix the values of \(C\), \(D\) and gives us a unique solution \(u(x)=-\frac{1}{2}x^2 + \frac{1}{2}x\).&lt;/p&gt;
+
+&lt;h3 id=&quot;finite-differences&quot;&gt;Finite Differences&lt;/h3&gt;
+&lt;p&gt;In order to solve the PDE on a computer, we need to find a way to represent or approximate the derivatives numerically, which is done using Finite Differences. From &lt;em&gt;Taylor Series&lt;/em&gt;, we know that&lt;/p&gt;
+
+\[u(x+h) = u(x) + h u'(x) + \frac{h^2}{2!}u''(x) + \frac{h^3}{3!}u'''(x) + \cdots \tag{2}\]
+
+&lt;p&gt;and&lt;/p&gt;
+
+\[u(x-h) = u(x) - h u'(x) + \frac{h^2}{2!}u''(x) - \frac{h^3}{3!}u'''(x) + \cdots \tag{3}\]
+
+&lt;p&gt;Rearranging Equation \((2)\), we can get the &lt;em&gt;Forward Difference Approximation&lt;/em&gt; to the 1st order derivative&lt;/p&gt;
+
+\[\begin{aligned}
+\frac{u(x+h) -  u(x)}{h} &amp;amp; = u'(x) + \frac{h}{2!}u''(x) + \frac{h^2}{3!}u'''(x) + \cdots \\
+                        &amp;amp; = u'(x) + \mathcal{O}(h) 
+\end{aligned} \tag{4}\]
+
+&lt;p&gt;Similarly from Equation \((3)\), we can get the &lt;em&gt;Backward Difference Approximation&lt;/em&gt; to the 1st order derivative&lt;/p&gt;
+
+\[\begin{aligned}
+\frac{u(x) -  u(x-h)}{h} &amp;amp; = u'(x) - \frac{h}{2!}u''(x) + \frac{h^2}{3!}u'''(x) + \cdots \\
+                        &amp;amp; = u'(x) + \mathcal{O}(h) 
+\end{aligned} \tag{5}\]
+
+&lt;p&gt;Finally, subtracting Equation \((3)\) from Equation \((2)\), we can get the &lt;em&gt;Centered Difference Approximation&lt;/em&gt; to the 1st order derivative&lt;/p&gt;
+
+\[\begin{aligned}
+\frac{u(x+h) -  u(x-h)}{2h} &amp;amp; = u'(x) + \frac{2h^2}{3!}u'''(x) + \cdots \\
+                        &amp;amp; = u'(x) + \mathcal{O}(h^2) 
+\end{aligned} \tag{6}\]
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;em&gt;Centered Difference&lt;/em&gt; is 2nd order Accurate in \(h\) while others are 1st order Accurate in \(h\)!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;We can also add Equations \((2)\) and \((3)\), to get an approximation to 2nd order derivative&lt;/p&gt;
+
+\[\begin{aligned}
+\frac{u(x+h) - 2u(x) +  u(x-h)}{h^2} &amp;amp; = u''(x) + \frac{2h^2}{4!}u''''(x) + \cdots \\
+                        &amp;amp; = u''(x) + \mathcal{O}(h^2) 
+\end{aligned} \tag{7}\]
+
+&lt;blockquote&gt;
+  &lt;p&gt;2nd order derivative is by default 2nd order accurate in \(h\)!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;difference-equation&quot;&gt;Difference Equation&lt;/h2&gt;
+&lt;p&gt;The next step is to use the above defined equations \((2)\) through \((7)\) and convert the &lt;em&gt;Differential Equation&lt;/em&gt; to a &lt;em&gt;Difference Equation&lt;/em&gt;. For this, we need &lt;strong&gt;numerical descretisation&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;numerical-discretisation&quot;&gt;Numerical Discretisation&lt;/h3&gt;
+&lt;p&gt;Considering the PDE in Equation \((1)\), where the domain lies between 0 and 1. What discretisation does is represent this continuous domain using a finite set of points. As shown in Figure 2, I’m discretising the domain into 5 equispaced points with distance \(h\) between the two adjacent points.&lt;/p&gt;
+
+&lt;h3 id=&quot;solution&quot;&gt;Solution&lt;/h3&gt;
+</description>
+        <pubDate>Wed, 20 Sep 2023 04:00:00 -0600</pubDate>
+        <link>http://localhost:4000/Computational-Sciences/2023/09/20/Differential-Difference-Equations/</link>
+        <guid isPermaLink="true">http://localhost:4000/Computational-Sciences/2023/09/20/Differential-Difference-Equations/</guid>
+        
+        
+      </item>
     
       <item>
         <title>Four Special Matrices</title>
@@ -55,1250 +153,74 @@
   &lt;p&gt;Don’t touch determinants when dealing with invertibility! Any numerical methods library will evaluate determinants this way by first converting the matrix into an upper triangular form and then taking the product of the diagonal elements. In this case, the determinant is \(5\)!&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h2 id=&quot;github-actions&quot;&gt;GitHub Actions&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;GitHub Actions&lt;/strong&gt; can automatically run tests and documenter everytime I push code to the GitHub Repository.&lt;/p&gt;
+&lt;h2 id=&quot;circulant-matrix&quot;&gt;Circulant Matrix&lt;/h2&gt;
+&lt;p&gt;Consider another matrix similar to \(K_4\) (discussed in [[Introduction to Four Special Matrices]]), such that the value \(-1\) wraps around the row, Let’s call this matrix a circulant matrix and denote this as,&lt;/p&gt;
 
-&lt;p&gt;To do this, first create &lt;em&gt;.github/&lt;/em&gt; folder with &lt;em&gt;Documenter.yml&lt;/em&gt; and &lt;em&gt;Runtests.yml&lt;/em&gt; files (these are the config files for GitHub actions):&lt;/p&gt;
+\[C_4=\begin{pmatrix}2 &amp;amp; -1 &amp;amp; 0 &amp;amp; -1\\-1 &amp;amp; 2 &amp;amp; -1 &amp;amp; 0 \\0 &amp;amp; -1 &amp;amp; 2 &amp;amp; -1 \\-1 &amp;amp; 0 &amp;amp; -1 &amp;amp; 2 \\\end{pmatrix}\]
 
-&lt;p&gt;&lt;em&gt;Documenter.yml&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Documenter&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;branches&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;master&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;tags&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;*'&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;pull_request&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;runs-on&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ubuntu-latest&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# OS Support&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;actions/checkout@v2&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;julia-actions/setup-julia@latest&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;1.8.3'&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Julia Version&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Install dependencies&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;julia --project=docs/ -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Build and deploy&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;GITHUB_TOKEN&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;$&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# For authentication with GitHub Actions token&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;DOCUMENTER_KEY&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;$&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# For authentication with SSH deploy key&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;julia --project=docs/ docs/make.jl&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;em&gt;Runtests.yml&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Runtests&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;push&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pull_request&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;runs-on&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;$&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;strategy&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;julia-version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;1.8.3'&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Julia Version&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;julia-arch&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;x64&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 64 bit Architecture Support&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;macOS-latest&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ubuntu-latest&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# OS Support&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;actions/checkout@v2&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;julia-actions/setup-julia@latest&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;$&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;julia-actions/julia-buildpkg@latest&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;julia-actions/julia-runtest@latest&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Package Structure:&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;jac/
-├─ .git/
-├─ .github/
-│  └─ workflows/
-│     ├─ Documenter.yml
-│     └─ Runtests.yml
-├─ docs/
-│  ├─ src/
-│  │  ├─ Development
-│  │  |     ├─
-│  |  ├─ Examples
-│  │  |     ├─
-│  │  └─ index.md
-│  ├─ Project.toml
-│  └─ make.jl
-├─ src/
-│  └─ jac.jl
-├─ test/
-│  └─ runtests.jl
-├─ .gitignore
-├─ LICENSE
-├─ Project.toml
-└─ README.md
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now, I have to deploy keys for GitHub Actions. First, generate the keys using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DocumenterTools&lt;/code&gt; package:&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;julia&amp;gt; DocumenterTools.genkeys&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-┌ Info: add the public key below to https://github.com/&lt;span class=&quot;nv&quot;&gt;$USER&lt;/span&gt;/&lt;span class=&quot;nv&quot;&gt;$REPO&lt;/span&gt;/settings/keys with &lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;and write access
-└ the title can be left empty as GitHub can infer it from the key comment
-
-ssh-rsa WILL HAVE KEY HERE Documenter
-
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; Info: add a secure environment variable named &lt;span class=&quot;s1&quot;&gt;'DOCUMENTER_KEY'&lt;/span&gt; to https://travis-ci.com/&lt;span class=&quot;nv&quot;&gt;$USER&lt;/span&gt;/&lt;span class=&quot;nv&quot;&gt;$REPO&lt;/span&gt;/settings &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;you deploy using Travis CI&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; or https://github.com/&lt;span class=&quot;nv&quot;&gt;$USER&lt;/span&gt;/&lt;span class=&quot;nv&quot;&gt;$REPO&lt;/span&gt;/settings/secrets &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;you deploy using GitHub Actions&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; with value:
-
-WILL HAVE KEY HERE
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Follows the next steps:&lt;/p&gt;
+&lt;p&gt;Matrix \(C_4\) shares many properties with \(K_4\) such as:&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;Copy the ssh key (starting with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-rsa&lt;/code&gt;) in &lt;strong&gt;Settings/Deploy keys&lt;/strong&gt; on the GitHub repository’s website (figure below for details)&lt;/p&gt;
+  &lt;li&gt;&lt;strong&gt;Symmetric&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Sparse (not Tridiagonal though)&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Toeplitz&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
+&lt;p&gt;However, this matrix is not invertible! We can do the row reduction to verify this but there is another way to see this. If we multiply \(C_4\) with ones vector as shown in equation \((1)\), we get all zeros as the resulting vector and by definition a matrix is invertible if and only if it has zero vector in its null space!&lt;/p&gt;
+
+\[\begin{pmatrix} 2 &amp;amp; -1 &amp;amp; 0 &amp;amp; -1\\ -1 &amp;amp; 2 &amp;amp; -1 &amp;amp; 0 \\ 0 &amp;amp; -1 &amp;amp; 2 &amp;amp; -1 \\ -1 &amp;amp; 0 &amp;amp; -1 &amp;amp; 2 \\ \end{pmatrix} \begin{pmatrix} 1 \\ 1 \\ 1 \\ 1 \\ \end{pmatrix}= \begin{pmatrix} 0 \\ 0 \\ 0 \\ 0 \\ \end{pmatrix} \tag{1}\]
+
+&lt;p&gt;We can write the above statement mathematically as well. Consider \(Cu=0\) and if \(C^{-1}\) exists, then \(C^{-1}Cu=C^{-1}0\) and \(u=0\). However, we have \(u=1\) hence it’s not invertible!&lt;/p&gt;
+
+&lt;h2 id=&quot;practical-origin-of-matrices&quot;&gt;Practical Origin of Matrices&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Consider a system of \(4\) masses connected by springs (as shown below), and the matrix generated when trying to solve this system is \(K_4\).
     &lt;div class=&quot;imgcap&quot;&gt;
-  &lt;img src=&quot;https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/2022-12-23-Julia_packages/DocumenterKey.png&quot; alt=&quot;this slowpoke moves&quot; width=&quot;800&quot; /&gt;
-  &lt;div class=&quot;thecap&quot;&gt;Figure 1: Adding Documenter Key to GitHub.&lt;/div&gt;
-  &lt;/div&gt;
+&lt;img src=&quot;https://raw.githubusercontent.com/tgautam03/Computational-Sciences/gh-pages/assets/2023-09-11-Four-Special-Matrices/K4.png&quot; alt=&quot;this slowpoke moves&quot; width=&quot;800&quot; /&gt;
+&lt;div class=&quot;thecap&quot;&gt;Figure 1: Spring Mass System with fixed ends. &lt;/div&gt;
+&lt;/div&gt;
   &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Copy the secret key in &lt;strong&gt;Settings/Secrets/Actions&lt;/strong&gt; on the GitHub repository’s website (figure below for details)&lt;/p&gt;
-
+  &lt;li&gt;Now, if we remove the fixed ends and just tie the masses together, we get matrix \(C_4\). This is where the term circulant comes from.
     &lt;div class=&quot;imgcap&quot;&gt;
-  &lt;img src=&quot;https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/2022-12-23-Julia_packages/Secret.png&quot; alt=&quot;this slowpoke moves&quot; width=&quot;800&quot; /&gt;
-  &lt;div class=&quot;thecap&quot;&gt;Figure 2: Adding Secret Key to GitHub.&lt;/div&gt;
-  &lt;/div&gt;
+&lt;img src=&quot;https://raw.githubusercontent.com/tgautam03/Computational-Sciences/gh-pages/assets/2023-09-11-Four-Special-Matrices/C4.png&quot; alt=&quot;this slowpoke moves&quot; width=&quot;800&quot; /&gt;
+&lt;div class=&quot;thecap&quot;&gt;Figure 2: Spring Mass System with ends atached to each other in circular fashion. &lt;/div&gt;
+&lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Just as an example, take the spring mass system which gives \(K_4\) and free one end of support.
+    &lt;div class=&quot;imgcap&quot;&gt;
+&lt;img src=&quot;https://raw.githubusercontent.com/tgautam03/Computational-Sciences/gh-pages/assets/2023-09-11-Four-Special-Matrices/T4.png&quot; alt=&quot;this slowpoke moves&quot; width=&quot;800&quot; /&gt;
+&lt;div class=&quot;thecap&quot;&gt;Figure 3: Spring Mass System with one free end. &lt;/div&gt;
+&lt;/div&gt;
+
+    &lt;p&gt;In doing so, we get a new matrix \(T_4=\begin{pmatrix}1 &amp;amp; -1 &amp;amp; 0 &amp;amp; 0\\-1 &amp;amp; 2 &amp;amp; -1 &amp;amp; 0 \\0 &amp;amp; -1 &amp;amp; 2 &amp;amp; -1 \\0 &amp;amp; 0 &amp;amp; -1 &amp;amp; 2 \\\end{pmatrix}\).&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;For the sake of completeness, let’s free both ends.
+    &lt;div class=&quot;imgcap&quot;&gt;
+&lt;img src=&quot;https://raw.githubusercontent.com/tgautam03/Computational-Sciences/gh-pages/assets/2023-09-11-Four-Special-Matrices/B4.png&quot; alt=&quot;this slowpoke moves&quot; width=&quot;800&quot; /&gt;
+&lt;div class=&quot;thecap&quot;&gt;Figure 4: Spring Mass System with both free ends. &lt;/div&gt;
+&lt;/div&gt;
+
+    &lt;p&gt;Now, we get another new matrix \(B_4=\begin{pmatrix}1 &amp;amp; -1 &amp;amp; 0 &amp;amp; 0\\-1 &amp;amp; 2 &amp;amp; -1 &amp;amp; 0 \\0 &amp;amp; -1 &amp;amp; 2 &amp;amp; -1 \\0 &amp;amp; 0 &amp;amp; -1 &amp;amp; 1 \\\end{pmatrix}\).&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;One last thing before pushing the changes to remote repository, we have to modify &lt;em&gt;docs/make.jl&lt;/em&gt; file to include the URL to the GitHub repository:&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Documenter&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;using&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jac&lt;/span&gt;
+&lt;p&gt;All these four special matrices are &lt;strong&gt;Symmetric&lt;/strong&gt; and &lt;strong&gt;Sparse&lt;/strong&gt;. When it comes to invertibility, \(K\) and \(T\) are invertible, but \(C\) and \(B\) aren’t. A physics intuition is that the systems with some sort of support (fixed end in this case) results in invertible matrices while the unsupported systems give non-invertible matrices.&lt;/p&gt;
 
-&lt;span class=&quot;n&quot;&gt;makedocs&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;sitename&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;jac&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Documenter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;HTML&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(),&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;modules&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jac&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;\(T\) and \(B\) are not Toeplitz!&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;span class=&quot;c&quot;&gt;# Documenter can also automatically deploy documentation to gh-pages.&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# See &quot;Hosting Documentation&quot; and deploydocs() in the Documenter manual&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# for more information.&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;deploydocs&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;repo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;github.com/tgautam03/jac.git&quot;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# URL to Repo&lt;/span&gt;
-&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now, push the changes to GitHub.&lt;/p&gt;
-
-&lt;h2 id=&quot;final-touches&quot;&gt;Final Touches&lt;/h2&gt;
-&lt;p&gt;In the remote repository, I can now see the Tests and Documenter running inside &lt;em&gt;Actions&lt;/em&gt; tab. I can also add &lt;strong&gt;Badges&lt;/strong&gt; so that I don’t have to look inside &lt;em&gt;Actions&lt;/em&gt; tab every time to check the status (this is done inside &lt;em&gt;Actions/Documenter&lt;/em&gt; and &lt;em&gt;Actions/Runtests&lt;/em&gt; using triple dots on the top right corner).&lt;/p&gt;
-
-&lt;p&gt;Once the documentation is deployed, I can check the URL on GitHub Repo itself (in my case it’s https://tgautam03.github.io/jac/dev/).&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Another thing is, \(K\) and \(T\) are positive definite (pivots are all positive in upper triangular form) while \(C\) and \(B\) are positive semi-definite (pivots are zeros or positive in upper triangular form).&lt;/p&gt;
+&lt;/blockquote&gt;
 
 &lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://jaantollander.com/post/how-to-create-software-packages-with-julia-language/&quot;&gt;Jaan’s blog post&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://ocw.mit.edu/courses/18-085-computational-science-and-engineering-i-fall-2008/&quot;&gt;MITOCW 18.085 Computational Science and Engineering 1&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
         <pubDate>Mon, 11 Sep 2023 04:00:00 -0600</pubDate>
         <link>http://localhost:4000/Computational-Sciences/2023/09/11/Four-Special-Matrices/</link>
         <guid isPermaLink="true">http://localhost:4000/Computational-Sciences/2023/09/11/Four-Special-Matrices/</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>Github pages for the repository</title>
-        <description>&lt;h3 id=&quot;prerequisites&quot;&gt;Prerequisites&lt;/h3&gt;
-&lt;p&gt;I’m assuming that:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Jekyll is installed and you know how to work with it (it’s relatively easy and you can check the links provided at the end of this post).&lt;/li&gt;
-  &lt;li&gt;Main Github Pages website is setup and ready (&lt;a href=&quot;https://github.com/tgautam03/tgautam03.github.io&quot;&gt;here’s mine&lt;/a&gt;).&lt;/li&gt;
-  &lt;li&gt;You have your website layout ready (I forked Andrej Karpathy’s &lt;a href=&quot;https://karpathy.github.io/&quot;&gt;blog website&lt;/a&gt; from his &lt;a href=&quot;https://github.com/karpathy/karpathy.github.io&quot;&gt;github repository&lt;/a&gt;).&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;setup&quot;&gt;Setup&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;The very first thing I do is create &lt;em&gt;/docs&lt;/em&gt; folder in the main repository (example &lt;a href=&quot;https://github.com/tgautam03/Algorithmic-Toolbox&quot;&gt;here&lt;/a&gt;).&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;After this I just used the configuration files from Karpathy’s repository (obviously I didn’t plagarise his work and only used the website layout which is open-source) and ran &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle install&lt;/code&gt; command to update website in accordance with &lt;em&gt;_config.yml&lt;/em&gt; contents.&lt;/p&gt;
-
-    &lt;blockquote&gt;
-      &lt;p&gt;I ran into an error involving &lt;em&gt;charlock_holmes&lt;/em&gt; and resolved that by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo apt install libicu-dev&lt;/code&gt;. Also the website didn’t deploy until I installed &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle add webrick&lt;/code&gt;.&lt;/p&gt;
-    &lt;/blockquote&gt;
-
-    &lt;blockquote&gt;
-      &lt;p&gt;If you want to you build your own website layout, use the command &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jekyll new --skip-bundle .&lt;/code&gt;&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Now, commit and push the changes to remote github repository.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Next, go to &lt;em&gt;Settings/Pages&lt;/em&gt; on Github and select the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main&lt;/code&gt; branch alongside the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/docs&lt;/code&gt; folder under &lt;em&gt;Build and deployment&lt;/em&gt; section.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Finally, copy the markdown file to main github pages’s posts folder too (for some reason it only pick links from main website).&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
-&lt;p&gt;This post covers:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Setting up repository website using Github Pages.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;useful-links&quot;&gt;Useful Links&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/creating-a-github-pages-site-with-jekyll&quot;&gt;Github Docs&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/github/linguist/issues/3878&quot;&gt;charlock_holmes error&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sun, 13 Nov 2022 02:00:00 -0700</pubDate>
-        <link>http://localhost:4000/Computational-Sciences/2022/11/13/Github_Pages/</link>
-        <guid isPermaLink="true">http://localhost:4000/Computational-Sciences/2022/11/13/Github_Pages/</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>Pointers for GPGPU</title>
-        <description>&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
-
-&lt;p&gt;This post contains a detailed discussion on the following points:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;CPUs are latency oriented while GPUs are throughput oriented devices.&lt;/li&gt;
-  &lt;li&gt;Linear layout of bytes in RAM.&lt;/li&gt;
-  &lt;li&gt;There’s a unique address associated with each byte in RAM.&lt;/li&gt;
-  &lt;li&gt;Pointer stores the address of an object.&lt;/li&gt;
-  &lt;li&gt;Pointer is necessary to declare a dynamic array.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
-
-&lt;p&gt;The graphics processing unit, or GPU, has become one of the most important types of computing technology. Although they’re best known for their capabilities in gaming or mining crypto-currencies, GPUs are becoming more popular for use in Creative Production, Artificial Intelligence (AI) and Scientific Computing. Broadly speaking, GPUs are known to have large number of processing units but there are a few other things that distinguish a GPU from a CPU. Understanding the strengths and weaknesses of GPUs is crucial in leveraging their power and &lt;em&gt;an efficient high performance computer program must make use of both CPU and GPU&lt;/em&gt;.&lt;/p&gt;
-
-&lt;p&gt;Here are a few points of difference between a CPU and a GPU:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;CPUs have powerful ALUs to reduce latency, while GPUs have efficient but large number of ALUs to maximize throughput.&lt;/li&gt;
-  &lt;li&gt;CPUs use large caches to store data close to the ALU, while GPUs don’t use caches to store data but rather a staging area for large threads.&lt;/li&gt;
-  &lt;li&gt;CPUs have sophisticated control, while GPUs have simple control.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/GPGPU_SERIES/00_Pointers/Figure_1.gif&quot; alt=&quot;this slowpoke moves&quot; width=&quot;800&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;Figure 1: Differences between CPU and GPU. &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;!--
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;/assets/GPGPU_SERIES/00_Pointers/Figure_5.png&quot;&gt;
-&lt;div class=&quot;thecap&quot;&gt;Figure 1: Differences between CPU and GPU. &lt;/div&gt;
-&lt;/div&gt; --&gt;
-
-&lt;p&gt;&lt;strong&gt;General-purpose computing on graphics processing units&lt;/strong&gt; (&lt;strong&gt;GPGPU&lt;/strong&gt;) is the use of a &lt;a href=&quot;https://en.wikipedia.org/wiki/Graphics_processing_unit&quot;&gt;graphics processing unit&lt;/a&gt; (GPU), which typically handles computation only for &lt;a href=&quot;https://en.wikipedia.org/wiki/Computer_graphics&quot;&gt;computer graphics&lt;/a&gt;, to perform computation in applications traditionally handled by the &lt;a href=&quot;https://en.wikipedia.org/wiki/Central_processing_unit&quot;&gt;central processing unit&lt;/a&gt; (CPU).&lt;/p&gt;
-
-&lt;p&gt;Before studying GPUs, it’s important to know how CPU perform computations.&lt;/p&gt;
-
-&lt;h2 id=&quot;memory-ram-in-modern-computers&quot;&gt;Memory (RAM) in modern computers&lt;/h2&gt;
-
-&lt;p&gt;Arrays are the most frequently used data structures when it comes to High Performance Computing. Whenever an array is declared, it’s elements are stored in the system RAM in a specific manner. Before diving into arrays, it’s important to understand how memory systems work in a modern computer.&lt;/p&gt;
-
-&lt;p&gt;RAM can be viewed as an array of bytes with a unique address for each location as shown in &lt;em&gt;Figure 2&lt;/em&gt;.&lt;/p&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/GPGPU_SERIES/00_Pointers/Figure_2.gif&quot; alt=&quot;this slowpoke moves&quot; width=&quot;800&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;Figure 2: Memory layout in modern computer. &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;introduction-to-pointers&quot;&gt;Introduction to Pointers&lt;/h2&gt;
-
-&lt;p&gt;Different data types take up different amount of space in the memory, for example an &lt;em&gt;integer&lt;/em&gt; takes up 4 bytes and a double takes up 8 bytes. So when we declare &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int a = 4&lt;/code&gt;  in a program, it’s stored in the memory where it takes up 4 &lt;em&gt;consecutive&lt;/em&gt; bytes (shown by highlighted section in &lt;em&gt;Figure 3&lt;/em&gt;).&lt;/p&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/GPGPU_SERIES/00_Pointers/Figure_3.gif&quot; alt=&quot;this slowpoke moves&quot; width=&quot;800&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;Figure 3: 4 bytes occupied by variable in RAM with starting location at 102. &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;A pointer is an object that contains a memory address.&lt;/strong&gt; Very often this address is the location of another object such as variable. The general form of a pointer variable declaration is &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;type *var_name&lt;/code&gt;. The base type of a pointer determines what type of data the pointer will be pointing to.&lt;/p&gt;
-
-&lt;h3 id=&quot;pointer-operators&quot;&gt;Pointer Operators&lt;/h3&gt;
-
-&lt;p&gt;Continuing the example used above, if we want &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ptr&lt;/code&gt; to points to integer &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a&lt;/code&gt;, i.e. store the address of integer variable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a&lt;/code&gt;, we first have to define it with type &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int&lt;/code&gt; (line 2 of code in &lt;em&gt;Figure 4&lt;/em&gt;). Now that we have defined a pointer, there are two special operators that are used with pointers to perform different tasks.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;amp;&lt;/code&gt;: Returns the memory address of it’s operand. In line 3 of &lt;em&gt;Figure 4&lt;/em&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;amp;&lt;/code&gt; retrieves the address at which variable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a&lt;/code&gt; is stored in memory and puts that in the pointer &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ptr&lt;/code&gt;.&lt;/p&gt;
-
-    &lt;p&gt;&lt;em&gt;We know that variable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;a&lt;/code&gt; is stored in 4 locations, so which address value is retrieved by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;amp;&lt;/code&gt; operator?&lt;/em&gt;&lt;/p&gt;
-
-    &lt;p&gt;The answer to this is that it returns the address at which the variable starts (i.e. in &lt;em&gt;Figure 4&lt;/em&gt; it’s location number 102).&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*&lt;/code&gt;: It’s compliment of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;amp;&lt;/code&gt; and returns the value of the variable located at the address specified by its operand. Line 4 in &lt;em&gt;Figure 4&lt;/em&gt; puts 4 in the variable &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;val&lt;/code&gt;.&lt;/p&gt;
-
-    &lt;p&gt;&lt;em&gt;At this point, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ptr&lt;/code&gt; only contains the location 102, but to form the integer 4, data at locations 103, 104 and 105 is also required. So how does a computer figure this out?&lt;/em&gt;&lt;/p&gt;
-
-    &lt;p&gt;From the type of a pointer (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int&lt;/code&gt; in this case), a compiler knows how many &lt;em&gt;consecutive&lt;/em&gt; locations it has to access in order to provide the correct value.&lt;/p&gt;
-
-    &lt;p&gt;This operator can also be used to assign values to a variable.&lt;/p&gt;
-
-    &lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// ptr assigned address of x&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// x assigned value 123&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Increments x by 1;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;endl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Prints 124&lt;/span&gt;
-
-&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Decrements x by 1;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;endl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Prints 123&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-
-    &lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/GPGPU_SERIES/00_Pointers/Figure_4.gif&quot; alt=&quot;this slowpoke moves&quot; width=&quot;800&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;Figure 4: Declaring and using a pointer.&lt;/div&gt;
-&lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;The base type of a pointer is important&lt;/strong&gt;. Pointer with base type &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int&lt;/code&gt; can only hold address of &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int&lt;/code&gt; variable. We can &lt;em&gt;cast&lt;/em&gt; the type to get rid of the error but that will lead to different problems.&lt;/p&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;double&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// ERROR!&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;pointers-and-arrays&quot;&gt;Pointers and Arrays&lt;/h2&gt;
-
-&lt;p&gt;In C++. there’s a close relationship between arrays and pointers. When an array &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;arr&lt;/code&gt; is declared (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;int arr[10]&lt;/code&gt;), and the name is used without index, it returns a pointer that points to the 1st element of the array. Let’s look at an example where we define an array with two elements. A pointer can then be used to access or manipulate the defined array as follows&lt;/p&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Defining array&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Initialising pointer&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Pointer now points to 1st element of array&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;We can now perform arithmetic operations on elements of array using pointer. Note that now we can use pointer and array interchangeably, hence &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*(ptr+i)&lt;/code&gt; will skip 3 locations and point to the next element of the array.&lt;/p&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ptr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Adding 1 to each element&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// Printing array&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*(ptr+i)&lt;/code&gt; is equivalent to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ptr[i]&lt;/code&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;The above code gives the following output.&lt;/p&gt;
-
-&lt;div class=&quot;language-terminal highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;go&quot;&gt;4
-5
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;C++ allows two ways to access arrays, and using pointers is usually faster as compiler generates different code and mostly indexing operator has an overhead.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;multidimensional-arrays&quot;&gt;Multidimensional Arrays&lt;/h2&gt;
-
-&lt;p&gt;As the memory layout in a computer is linear, all multidimensional arrays are flattened to 1D and then stored. Let’s consider an example of a 2D array with 2 rows and 2 columns. C++ uses row major layout, i.e. different rows are stacked one after the other to make a long 1D array as shown in &lt;em&gt;Figure 5&lt;/em&gt;.&lt;/p&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;https://raw.githubusercontent.com/tgautam03/tgautam03.github.io/master/assets/GPGPU_SERIES/00_Pointers/Figure_5.gif&quot; alt=&quot;this slowpoke moves&quot; width=&quot;800&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;Figure 5: Linear layout of 2D array in memory. &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;We can use similar technique to define a flattened 2D array (dynamic) in C++. Dynamic array is an array that can adjust it’s size during runtime. It’s memory space is allocated during runtime and is located in heap. To create a dynamic array we need a pointer variable and then use &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;new&lt;/code&gt; to allocate space in the heap.&lt;/p&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Allocate space for 4 integer variables&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// arr[0][0]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// arr[0][1]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// arr[1][0]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// arr[1][1]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;After we’re done using this dynamic array it’s &lt;strong&gt;crucial&lt;/strong&gt; to delete it and free the space as follows.&lt;/p&gt;
-
-&lt;div class=&quot;language-c++ highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;delete&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;There is a way to create 2D dynamic arrays via &lt;em&gt;pointer of pointer&lt;/em&gt;, but that doesn’t work well for GPGPU programming.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;CPUs and GPUs have very different architecture.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Pointers are really powerful when it comes to manipulating data stored in the memory.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;In C/C++, Pointers and Arrays go hand in hand.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Pointers provide the way to create dynamic arrays.&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;All modern programs must use the combination of CPUs and GPUs.&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.intel.com/content/www/us/en/products/docs/processors/what-is-a-gpu.html&quot;&gt;Link to intel website&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units&quot;&gt;Link to Wikipedia&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sat, 26 Feb 2022 14:00:00 -0700</pubDate>
-        <link>http://localhost:4000/Computational-Sciences/2022/02/26/PointersRefresher/</link>
-        <guid isPermaLink="true">http://localhost:4000/Computational-Sciences/2022/02/26/PointersRefresher/</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>Automatic differentiation (forward mode)</title>
-        <description>&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;From Taylor Series we know that \(f(x+h)=f(x)+hf^{'}(x)\) (setting \(h^2=0\)). This statement gives us a way to represent a function by it’s value and derivative:&lt;/p&gt;
-
-\[f(x)\rightarrow f(x)+\epsilon f^{'}(x)\]
-
-&lt;blockquote&gt;
-  &lt;p&gt;The idea is very similar to the one of &lt;strong&gt;Complex Step Finite Difference&lt;/strong&gt; where the value and the chance is stored separately, i.e. &lt;em&gt;Dual Numbers&lt;/em&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;dual-numbers&quot;&gt;Dual Numbers&lt;/h2&gt;
-&lt;p&gt;Thus, to extend the idea of complex step differentiation beyond complex analytic functions, we define a new number type, the dual number. A dual number is a multidimensional number where the sensitivity of the function is propagated along the dual portion.&lt;/p&gt;
-
-&lt;p&gt;A struct can be used to track both value and the gradient.&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt; Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Let’s consider two functions:&lt;/p&gt;
-
-\[f(x)\rightarrow f(x)+\epsilon f^{'}(x)\]
-
-\[g(x)\rightarrow g(x)+\epsilon g^{'}(x)\]
-
-&lt;h3 id=&quot;addition-rule&quot;&gt;Addition Rule&lt;/h3&gt;
-&lt;p&gt;Adding the above two functions give:&lt;/p&gt;
-
-\[(f+g)(x)\rightarrow f(x)+g(x)+\epsilon \big[f^{'}(x)+g^{'}(x)\big]\]
-
-&lt;p&gt;This can be easily coded by overriding &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;+&lt;/code&gt; operator in julia such that it collects gradients as well whenever &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Dual&lt;/code&gt; type is used.&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.:+&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.:+&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.:+&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Similar rules can be applied to other basic operations.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;subtraction-rule&quot;&gt;Subtraction Rule&lt;/h3&gt;
-
-\[(f-g)(x)\rightarrow f(x)-g(x)+\epsilon \big[f^{'}(x)-g^{'}(x)\big]\]
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.:-&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.:-&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.:-&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;multiplication-rule&quot;&gt;Multiplication Rule&lt;/h3&gt;
-
-\[(f \cdot g)(x)\rightarrow f(x)g(x)+\epsilon \big[f(x)g^{'}(x)+f^{'}(x)g(x)\big]\]
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.:*&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.:*&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.:*&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Note that \(\epsilon^2=0\)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;division-rule&quot;&gt;Division Rule&lt;/h3&gt;
-
-\[(\frac{f}{g})(x)\rightarrow \frac{f(x)}{g(x)}+\epsilon \bigg[\frac{f^{'}(x)g(x)-f(x)g^{'}(x)}{g(x)^2}\bigg]\]
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.:/&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.:/&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.:/&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;If we have been paying attention, the term inside the \(\epsilon\) basically contains the derivative rules that we know from our childhood!!&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;exponential-operator&quot;&gt;Exponential Operator&lt;/h3&gt;
-&lt;p&gt;We know that \(x^3\) basically means \(((x\times x)\times x)\), so we can exploit the &lt;strong&gt;multiplication rule&lt;/strong&gt; to define this.&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.:^&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;power_by_squaring&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;differential-equations&quot;&gt;Differential Equations&lt;/h2&gt;
-&lt;p&gt;Suppose we have a function \(f(x)=x^2+2x\). From chain rule, we can write \(\frac{\partial f}{\partial x}=\frac{\partial f}{\partial x} \times \frac{\partial x}{\partial x}\) where \(\frac{\partial x}{\partial x}=1\). Hence to get the &lt;em&gt;automatic differentiation&lt;/em&gt; to supply \(\frac{\partial f}{\partial x}\), we need to define the input \(x\) as a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Dual&lt;/code&gt; number, i.e. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Dual(x, 1)&lt;/code&gt;, where &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;x&lt;/code&gt; is the value at which we want to compute gradient.&lt;/p&gt;
-
-&lt;p&gt;Let’s evaluate gradient at \(x=2\).&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Function Value: &quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Function Gradient: &quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Above code returns:&lt;/p&gt;
-&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Function Value: 8
-Function Gradient: 6
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;whats-the-catch&quot;&gt;What’s the catch?&lt;/h3&gt;
-&lt;p&gt;We’re getting both the function value and the gradient together. There has to be a hit on performance?&lt;/p&gt;
-
-&lt;p&gt;Using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BenchmarkTools&lt;/code&gt; and evaluating for the scalar input, we complete the execution in 0.016 ns.&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Normal Function eval&lt;/span&gt;
-&lt;span class=&quot;nd&quot;&gt;@btime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0.016 ns (0 allocations: 0 bytes)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Let’s see what we get when &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Dual&lt;/code&gt; number is given as the input.&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Val + grad eval&lt;/span&gt;
-&lt;span class=&quot;nd&quot;&gt;@btime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;));&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0.016 ns (0 allocations: 0 bytes)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;It’s exactly the same and &lt;strong&gt;Vectorisation&lt;/strong&gt; can explain these findings.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Modern CPUs have Vector Registers hence &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;value&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grad&lt;/code&gt; are evaluated in parallel. This can be easily seen by looking at the assembly code (notice commands like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vmovdqu&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;vpaddq&lt;/code&gt;).&lt;/p&gt;
-  &lt;pre&gt;&lt;code class=&quot;language-assembly&quot;&gt;.text
-; ┌ @ In[8]:1 within `h'
-	pushq	%r14
-	pushq	%rbx
-	subq	$24, %rsp
-	movq	%rsi, %rbx
-	movq	%rdi, %r14
-; │┌ @ none within `literal_pow'
-; ││┌ @ none within `macro expansion'
-; │││┌ @ In[6]:1 within `^'
-	movabsq	$power_by_squaring, %rax
-	movq	%rsp, %rdi
-	movl	$2, %edx
-	callq	*%rax
-; │└└└
-; │┌ @ In[4]:3 within `*' @ int.jl:88
-	vmovdqu	(%rbx), %xmm0
-	vpaddq	%xmm0, %xmm0, %xmm0
-; │└
-; │┌ @ In[2]:1 within `+' @ int.jl:87
-	vpaddq	(%rsp), %xmm0, %xmm0
-; │└
-	vmovdqu	%xmm0, (%r14)
-	movq	%r14, %rax
-	addq	$24, %rsp
-	popq	%rbx
-	popq	%r14
-	retq
-	nop
-; └
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;higher-dimensions&quot;&gt;Higher Dimensions&lt;/h2&gt;
-&lt;p&gt;Suppose we have functions \(f(x, y) = x^2 + xy\) and \(g(x, y) = y^3 + x\) and we want to compute jacobian \(J = 
-\begin{bmatrix} 
-\frac{\partial f}{\partial x} &amp;amp; \frac{\partial f}{\partial y}\\
-\frac{\partial g}{\partial x} &amp;amp; \frac{\partial g}{\partial y}
-\end{bmatrix}\) at \($x=3, y=4\).&lt;/p&gt;
-
-&lt;p&gt;This can be done by evaluating all four elements separately as follows:&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;ff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gg&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;df_dx&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;df_dy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;dg_dx&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gg&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;dg_dy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gg&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;
-
-
-&lt;span class=&quot;n&quot;&gt;J&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;zeros&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;J&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df_dx&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;J&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df_dy&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;J&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dg_dx&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;J&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dg_dy&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Jacobian: &quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;show&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;stdout&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;text/plain&quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;J&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Jacobian: 
-2×2 Matrix{Float64}:
- 10.0   3.0
-  1.0  48.0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Hence, for \(f(x_1, x_2, \cdots, x_n)\), we’ll have to do differentiation &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;n&lt;/code&gt; times. Let’s see if we can relax this condition a bit.&lt;/p&gt;
-
-&lt;p&gt;We know that \(\nabla f = \left[\begin{array}{ccc}
-\dfrac{\partial f(x,y)}{\partial x} &amp;amp; \dfrac{\partial f(x,y)}{\partial y}
-\end{array}\right]\), hence what if we could do something like &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;df = ff(X).grads where (X=[x y])&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;df=[ff(Dual(3, 1), Dual(4, 0)).grad, ff(Dual(3, 0), Dual(4, 1)).grad]&lt;/code&gt;, i.e. utilise the &lt;strong&gt;vector instructions&lt;/strong&gt; to calculate each partial derivative in parallel?&lt;/p&gt;
-
-&lt;p&gt;This is where we need to define a new type, &lt;strong&gt;MultiDual&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;multidual&quot;&gt;MultiDual&lt;/h3&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt; MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;}&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;
-	&lt;span class=&quot;c&quot;&gt;# SVector is static vector which lives on the stack&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;grads&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SVector&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;}&lt;/span&gt; 
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;In &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MultiDual&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;N&lt;/code&gt; defines the number of variables in the function and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;T&lt;/code&gt; defines the type (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Int&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Float&lt;/code&gt;, etc. etc.).&lt;/p&gt;
-
-&lt;p&gt;Various rules can be defined using Taylor Series (like before), i.e. if \(x\) is a vector then Taylor Series is defined as&lt;/p&gt;
-
-\[f(x+\epsilon)=f(x)+\epsilon \nabla f(x)+O(\epsilon)\]
-
-&lt;blockquote&gt;
-  &lt;p&gt;Only change is that \(f^{'}\) is replaced by \(\nabla f\). Same thing goes for various differentiation rules.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h4 id=&quot;addition-rule-1&quot;&gt;&lt;strong&gt;Addition Rule&lt;/strong&gt;&lt;/h4&gt;
-&lt;p&gt;\((f+g)(x)\rightarrow f(x)+g(x)+\epsilon \big[\nabla f(x)+\nabla g(x)\big]\)&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; +&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;where&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;}(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grads&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grads&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;subtraction-rule-1&quot;&gt;&lt;strong&gt;Subtraction Rule&lt;/strong&gt;&lt;/h4&gt;
-&lt;p&gt;\((f-g)(x)\rightarrow f(x)-g(x)+\epsilon \big[\nabla f(x)-\nabla g(x)\big]\)&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;where&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;}(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grads&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grads&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;multiplication-rule-1&quot;&gt;&lt;strong&gt;Multiplication Rule&lt;/strong&gt;&lt;/h4&gt;
-&lt;p&gt;\((f \cdot g)(x)\rightarrow f(x)g(x)+\epsilon \big[f(x)\nabla g(x)+\nabla f(x)g(x)\big]\)&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;where&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;}(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grads&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grads&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Note we set \(\epsilon^2=0\)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;The term in the \(\epsilon\big[\cdot \cdot \cdot\big]\) contains the calculus rules that we remember from our childhood!!&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h4 id=&quot;division-rule-1&quot;&gt;&lt;strong&gt;Division Rule&lt;/strong&gt;&lt;/h4&gt;
-&lt;p&gt;\((\frac{f}{g})(x)\rightarrow \frac{f(x)}{g(x)}+\epsilon \bigg[\frac{\nabla f(x)g(x)-f(x)\nabla g(x)}{g(x)^2}\bigg]\)&lt;/p&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;where&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;}(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grads&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grads&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;exponential-operator-1&quot;&gt;&lt;strong&gt;Exponential operator&lt;/strong&gt;&lt;/h4&gt;
-
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; ^&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;where&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Base&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;power_by_squaring&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;calculating-efficient-jacobian&quot;&gt;Calculating efficient Jacobian&lt;/h3&gt;
-&lt;p&gt;Let’s now compute the Jacobian using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MultiDual&lt;/code&gt;. The two functions are&lt;/p&gt;
-
-\[f(x, y) = x^2 + xy\]
-
-\[g(x, y) = y^3 + x\]
-
-&lt;p&gt;The next step is to define &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MultiDual&lt;/code&gt; functions for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;x&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;y&lt;/code&gt;.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Let a function \(xx(x,y)=x + 0 \times y\). &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MultiDual&lt;/code&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;xx&lt;/code&gt; can be written as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;xx = MultiDual(x, SVector(1.,0.))&lt;/code&gt;. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SVector(1.,0.)&lt;/code&gt; is written because \(\frac{\partial xx}{x} = 1\) and \(\frac{\partial xx}{y} = 0\), hence these are set as the first and second elements of the vector.&lt;/li&gt;
-  &lt;li&gt;Similar for \(yy(x,y)=y + 0 \times x\), &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yy=MultiDual(y, SVector(0.,1.))&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Jacobian can then easily be calculated. Complete code shown below.&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;ff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;gg&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# Jacobian at x=3 and y=4&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;xx&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SVector&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;yy&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;4.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SVector&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Jacobian: &quot;&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xx&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;yy&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grads&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gg&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xx&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;yy&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grads&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Jacobian: [10.0, 3.0][1.0, 48.0]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;performace&quot;&gt;Performace&lt;/h3&gt;
-
-&lt;p&gt;Let’s verify if this actually makes out calculations fast.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Dual&lt;/code&gt;&lt;/strong&gt;
-    &lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;c&quot;&gt;# Jacobian using Dual&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; jacobian&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gg&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; 
-      &lt;span class=&quot;n&quot;&gt;ff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;gg&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;gg&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grad&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;nd&quot;&gt;@btime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jacobian&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gg&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  11.298 ns (0 allocations: 0 bytes)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MultiDual&lt;/code&gt;&lt;/strong&gt;
-    &lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;c&quot;&gt;# Jacobian using MultiDual&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; jacobianVec&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gg&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SVector&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SVector&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grads&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;gg&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SVector&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)),&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MultiDual&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SVector&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grads&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;nd&quot;&gt;@btime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;jacobianVec&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gg&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;3.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;4.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  6.530 ns (0 allocations: 0 bytes)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;As expected, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MultiDual&lt;/code&gt; is almost twice as fast as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Dual&lt;/code&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;Forward mode AutoDiff calculates derivatives along with the function values independently.&lt;/li&gt;
-  &lt;li&gt;Vectorisation is crucial to get high performance from the AutoDiff code.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;Programming Language: &lt;a href=&quot;https://julialang.org/&quot;&gt;Julia Programming Language&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Example Code: &lt;a href=&quot;https://github.com/tgautam03/lucidgrad/blob/main/nb/01_AutomaticDifferentiation.ipynb&quot;&gt;Jupyter Notebook&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Awesome Youtube Lecture: &lt;a href=&quot;https://www.youtube.com/watch?v=zHPXGBiTM5A&amp;amp;list=PLCAl7tjCwWyGjdzOOnlbGnVNZk0kB8VSa&amp;amp;index=13&amp;amp;t=1312s&quot;&gt;Forward-Mode Automatic Differentiation (AD) via High Dimensional Algebras&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-</description>
-        <pubDate>Sat, 20 Nov 2021 16:00:00 -0700</pubDate>
-        <link>http://localhost:4000/Computational-Sciences/2021/11/20/AutoDiffForward/</link>
-        <guid isPermaLink="true">http://localhost:4000/Computational-Sciences/2021/11/20/AutoDiffForward/</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>Finite Differences to evaluate derivatives</title>
-        <description>&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;From Taylor Series expansion we know that&lt;/p&gt;
-
-\[f(x+h)=f(x)+hf^{'}(x)+\frac{h^2}{2!}f^{''}(x)+\cdots\]
-
-&lt;p&gt;If \(h\) is small enough, we can ignore terms after the first order derivative so that we get&lt;/p&gt;
-
-\[f(x+h)\approx f(x)+hf^{'}(x)\]
-
-&lt;p&gt;Rearranging the terms, we get a formal definition of calculating derivatives&lt;/p&gt;
-
-\[f^{'}(x)\approx \frac{f(x+h)-f(x)}{h}\]
-
-&lt;blockquote&gt;
-  &lt;p&gt;Exact derivative is defined as 
-\(f^{'}(x)=\frac{d f}{d x} = \lim_{h\to0} \frac{f(x+h)-f(x)}{h}\)&lt;/p&gt;
-
-  &lt;p&gt;&lt;strong&gt;Claim:&lt;/strong&gt;
-The above statement suggests that as \(h \to 0\) (i.e. \(h\) is really small), we can get derivative that is very close to the actual (analytic) derivative.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Let’s try the above claim and see if that holds up in practice. Consider a function \(f(x)=2sin(x)+x^2\).&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Defining Function&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sin&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;Let’s also store the analytical derivative to compare the result against.&lt;/p&gt;
-  &lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Analytical Derivative&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cos&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;The plot below shows the error as \(h\) is decreased.&lt;/p&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;/assets/02_FD/01_FD_plot.png&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;The Plot of Error as h is varied. Notice how the error explodes as h gets very close to 0. The reason behind this is the way computer handles floating point numbers/operations, and this'll prevent us from getting accuracy over 8(ish) decimal places. &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;reason&quot;&gt;Reason&lt;/h3&gt;
-&lt;p&gt;Let’s see what actually happens in detail. Suppose we choose \(h=10^{-8}\), then \(f(x + h) = 5.818594885328427\) and \(f(x) = 5.818594853651364\).&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Notice that \(8^{th}\) digit is the first one that’s different in both, so when these two terms are subtracted we get \(0.0000000316770628\). Next when \(10^{-8}\) is divided, we get \(3.1677062750645733\).&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;See how only the first few decimal places are relevant and rest are basically junk numbers adding the error. This increases as we further reduce \(h\).
-For Example, if \(h=10^{-18}\)&lt;/p&gt;
-
-\[f(x + h) = 5.818594853651364\]
-
-\[f(x) = 5.818594853651364\]
-
-\[f(x + h) - f(x) = 0.0\]
-
-\[(f(x + h) - f(x)) / h = 0.0\]
-
-\[sol = 3.1677063269057153\]
-&lt;/blockquote&gt;
-
-&lt;p&gt;So, the main problem here is due to the fact that we are trying to store the derivative in the same variable (64 bit) as the value which leads to subtraction of two very close numbers (\(f(x+h)\) and \(f(x)\)). This is known as &lt;strong&gt;Truncation Error&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;What if we could store the derivative in a separate variable?&lt;/p&gt;
-
-&lt;h2 id=&quot;complex-step-differentiation&quot;&gt;Complex Step Differentiation&lt;/h2&gt;
-&lt;p&gt;To store the derivative in a separate variable, we can use complex numbers where the real part will define the value of the function and the imaginary part will keep the derivative. This can be written using Taylor Series as follows&lt;/p&gt;
-
-\[f(x+\iota h)\approx f(x)+\iota hf^{'}(x)\]
-
-\[\iota f^{'}(x) \approx \frac{f(x+\iota h)- f(x)}{h}\]
-
-\[f^{'}(x) \approx \text{Imag}\bigg[\frac{f(x+\iota h)- f(x)}{h}\bigg]\]
-
-\[f^{'}(x) \approx \text{Imag}\bigg[\frac{f(x+\iota h)}{h}\bigg]\]
-
-&lt;p&gt;Let’s solve the same problem as above but using complex numbers now&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Defining Function&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Complex&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sin&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The following function will calcuate the derivate&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Finite DIfference&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; complexFiniteDiff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Complex&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;df_dx&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df_dx&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Plotting the results along with the previous case we can see that now the error is not exploding.&lt;/p&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;/assets/02_FD/02_Complex_FD.png&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;From the figure above we can see that not only we avoid the explosion of error, but a steep drop in the error is observed as well. &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;/assets/02_FD/02b_Complex_FD.png&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;Zoomed bottom left section of the previous plot is shown here where we can see the Complex FD approaching zero.&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Here are the different values in the intermediate steps for \(h=10^{-18}\)&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;f(complex(x, h)) = 5.818594853651364 + 3.1677063269057185e(-18)im
-
-f(complex(x, 0)) = 5.818594853651364 + 0.0im
-
-f(complex(x, h)) - f(complex(x, 0)) = 0.0 + 3.1677063269057185e(-18)im
-
-imag.(f(complex(x, h))) / h = 3.1677063269057153
-
-sol = 3.1677063269057153
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Well, it looks like we’ve solved the problem. Let’s try this method on a more complicated function \(f(x) = \sum_{i=1}^N x \times i\), and see the results for different values of \(N\).&lt;/p&gt;
-
-&lt;p&gt;Below are the functions that define the problem.&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# Function Definition&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; tough&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Complex&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;complex&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;f&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;## Complex Finite Difference&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; toughDiff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;complexFiniteDiff&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tough&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;complex&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;# Analytical Solution&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; actualGrad&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Real&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;df&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;/assets/02_FD/03_toughFunc1.png&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;At x=2, this plot shows the difference between the analytical gradient and the finite difference version.&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;/assets/02_FD/04_toughFunc2.png&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;For the sake of completeness, Central Difference (5th order) is also shown here (using FiniteDifferences.jl library for this).&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;As you can see that errors are quite high for large values of \(N\). This mainly is due to the accumulation of Floating Point errors as the loop is executed inside the function &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tough&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Is there a way to solve this problem as well? The answer is yes! and &lt;strong&gt;Automatic Differentiation&lt;/strong&gt; is the way to go.&lt;/p&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;/assets/02_FD/05_autoDiff.png&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;Results after applying Automatic Differentiation shows very minimal error (only floating point precision errors) and more importantly they're constant no matter how long the function chain is.&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;In the next few posts I’ll cover Automatic Differentiation and the two flavours of it (forward and reverse mode AutoDiff).&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;In Finite Differences, as the step size decreases, &lt;strong&gt;truncation error&lt;/strong&gt; dominates.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Truncation Error&lt;/strong&gt; can be eliminated using the Complex scheme for Finite Differences.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Roundoff error accumulation&lt;/strong&gt; in Finite Differences is another problem which makes this method unsuitable for tasks like &lt;strong&gt;Deep Learning&lt;/strong&gt; where thousands of multiplications and additions are performed in long chains.&lt;/li&gt;
-  &lt;li&gt;This is where &lt;strong&gt;Automatic Differentiation&lt;/strong&gt; comes in handy and is successfully used in several Deep Learning libraries like &lt;strong&gt;pytorch&lt;/strong&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;Programming Language: &lt;a href=&quot;https://julialang.org/&quot;&gt;Julia Programming Language&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Example Code: &lt;a href=&quot;https://github.com/tgautam03/lucidgrad/blob/main/nb/00_FiniteDifferences.ipynb&quot;&gt;jupyter notebook&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Awesome Youtube Lecture: &lt;a href=&quot;https://www.youtube.com/watch?v=zHPXGBiTM5A&amp;amp;list=PLCAl7tjCwWyGjdzOOnlbGnVNZk0kB8VSa&amp;amp;index=13&amp;amp;t=1312s&quot;&gt;Forward-Mode Automatic Differentiation (AD) via High Dimensional Algebras&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Tue, 16 Nov 2021 15:00:00 -0700</pubDate>
-        <link>http://localhost:4000/Computational-Sciences/2021/11/16/FiniteDiff/</link>
-        <guid isPermaLink="true">http://localhost:4000/Computational-Sciences/2021/11/16/FiniteDiff/</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>A high level introduction to Cache Memories</title>
-        <description>&lt;h3 id=&quot;why-study-caches&quot;&gt;Why study Caches?&lt;/h3&gt;
-&lt;p&gt;Let me first introduce a very simple problem of adding a scalar to each element of a 2D matrix. There are two ways in which I can do this:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Access elements row wise
-    &lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; rowAccess&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;AbstractMatrix&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-          &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-              &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-          &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Access elements column wise
-    &lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt; colAccess&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;AbstractMatrix&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-          &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-              &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-          &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-    &lt;blockquote&gt;
-      &lt;p&gt;I’ll be using Julia Programming language but feel free to follow along with any programming language.&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;When I run both of these independently (supplying \(5000\times5000\) matrix &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A&lt;/code&gt;) and benchmark it, I observe that the function &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rowAccess&lt;/code&gt; takes 160.2 ms to run while &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;colAccess&lt;/code&gt; finishes in 16.4 ms!!&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@btime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;colAccess&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;mf&quot;&gt;16.400&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ms&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;allocations&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@btime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rowAccess&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;mf&quot;&gt;160.207&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ms&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;allocations&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Both of these results can be explained easily after a good understanding of &lt;strong&gt;Caches&lt;/strong&gt;, hence it’s imperative that every programmer must understand how memories work in modern computers. In this blog post, I’ll be explaining the basic concepts related to &lt;strong&gt;Memory Heirarchy&lt;/strong&gt;, so that you can start writing &lt;em&gt;cache friendly&lt;/em&gt; code and avoid mistakes such the one in function &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rowAccess&lt;/code&gt;.&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;If you try to do the same thing in C/C++, you’ll notice that row access runs faster than column access. Don’t worry, this is normal and by the end of this post you’ll have the answer to this as well.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;introduction&quot;&gt;Introduction&lt;/h3&gt;
-&lt;p&gt;For most of the basic programming tasks, a simple model of a computer system is assumed in which CPU executes instructions and a memory system holds data/instructions for the CPU. This memory is assumed to be a linear array of bytes, where each memory location can be accessed in constant amount of time.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;In practice, a &lt;em&gt;memory system&lt;/em&gt; is a hierarchy of storage devices with different capacities, costs and access times.&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;/assets/01_Caches/fig01.png&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;Caches, Registers and RAM are the main storage devices in a modern computer.&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;From the figure above you can see different types of storage devices:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Registers&lt;/strong&gt;: Very small in size (few KBs), very fast access times, very expensive.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Caches&lt;/strong&gt;: Small in size (100s of KBs to few MBs), fast access times, expensive.&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;RAM&lt;/strong&gt;: Large in size (few GBs), moderate access times, moderate cost.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Access time is the time required to move data to the ALU for processing.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Let’s now see in detail how these memories work by going through the code example line by line.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;I’ll be discussing the details in a very abstract manner where I’ll not be diving into the bit-wise representation of arrays. So just remember that the way data is stores in RAM or cache is a bit more complicated than what I’ll be discussing. However I’ll cover these minute details in some other blog post.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;random-access-memory-ram&quot;&gt;Random Access Memory (RAM)&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;The most important thing to remember is that the data is stored in RAM in a linear fashion (1D).&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;The first step is to generate a \(5000\times5000\) matrix of random numbers. This is done in Julia as follows:&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rand&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;5000×5000 Matrix{Float64}:
- 5.03846   4.58912   7.1005    5.21892   …  4.54396   7.36507   4.01988
- 2.17532   2.41624   8.64615   0.84582      2.4431    2.97512   4.40888
- 1.93575   0.699285  8.7284    4.6449       1.37964   6.23566   2.98806
- 3.83268   8.42017   9.66205   7.14073      7.75752   0.183603  9.57737
- 4.6633    2.64513   8.15831   5.45722      8.30875   2.57161   0.02877
- 8.80673   2.21542   8.13674   9.93325   …  7.81374   7.65582   8.46948
- 7.67453   5.43839   1.6908    8.41406      0.425791  5.46946   8.81717
- 1.96266   4.69834   6.08504   2.73894      2.37154   2.1411    2.39905
- 0.744606  3.93134   2.12461   1.30628      0.160766  4.52978   9.93005
- 9.5532    3.50446   5.16795   0.891007     1.05626   4.37425   2.84276
- 9.15744   6.42421   7.94237   1.89686   …  6.61071   9.65093   7.54344
- 4.50209   5.50591   8.60566   1.73348      8.66581   5.33027   2.9608
- 1.44016   2.79131   9.62346   7.55472      6.54422   4.33858   9.03697
- ⋮                                       ⋱                      
- 5.73005   0.437692  7.03775   5.63305      5.82807   8.73      0.56327
- 2.08363   1.23326   5.05221   3.87795      7.64193   5.70619   0.6294
- 9.12929   1.17639   9.60084   3.89799   …  6.52743   4.21519   5.92673
- 9.35454   6.00617   5.482     9.12613      0.689471  6.18523   6.24744
- 4.90895   1.52338   9.34416   7.82992      3.30676   2.2884    5.95591
- 1.27204   2.50706   6.54941   3.55047      5.87974   7.33108   5.27113
- 3.73647   2.37662   2.22628   4.7821       4.95708   3.00419   4.84946
- 6.98472   2.7361    3.44572   3.36757   …  6.0354    9.19172   9.32838
- 4.70179   6.49456   0.326857  2.93387      8.12008   2.41638   5.09379
- 5.25246   0.102174  5.58784   9.64384      3.47783   9.39589   2.15167
- 1.78689   9.9175    3.11802   3.51899      5.82515   0.55363  8.6704
- 9.34795   6.2792    0.262552  9.31061      5.51025   9.08796   0.06783
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Julia stores this matrix in a column major way, i.e. all elements of column 1 is stored first followed by column 2, 3 and so on.&lt;/p&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;/assets/01_Caches/fig02.png&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;Data is stored in linear fashion in a RAM. Julia uses column major format but languages like C/C++ and python numpy stores in row major format.&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;The next thing we do is go into the functions and execute the code line by line.&lt;/p&gt;
-
-&lt;h3 id=&quot;registers&quot;&gt;Registers&lt;/h3&gt;
-&lt;p&gt;In both functions (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;colAccess&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rowAccess&lt;/code&gt;), the first two lines are same&lt;/p&gt;
-&lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;j&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;When these lines are executed, value of variables &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;j&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;size(A)[1]&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;size(A)[2]&lt;/code&gt; are stored in registers. This is done so that these small values (which are used repeatedly) are stored close to the ALU, hence decreasing the access times.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Access time of a register (time to move data from register to ALU) is negligible hence for programming purposes, it can be considered as 0 clock cycles (atleast relative to RAM).&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Next, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;j&lt;/code&gt; are used to access the element of the matrix. This is where things get interesting.&lt;/p&gt;
-
-&lt;h3 id=&quot;caches&quot;&gt;Caches&lt;/h3&gt;
-&lt;p&gt;For an instant let’s assume that there’s no cache in between the register and RAM, and we try to access data directly from RAM. When &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[j,i] = A[j,i]+1&lt;/code&gt; is executed for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i,j=1&lt;/code&gt;, element &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[1][1]&lt;/code&gt; is fetched from the RAM memory locaion 0 and passed to the ALU where 1 is added to it and it’s deposited back to the RAM location it was fetched from. The same thing then happens for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[2][1]&lt;/code&gt; followed by &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[3][1]&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[4][1]&lt;/code&gt;, and so on. Now the problem with this is that fetching data from RAM is slow (15-100 clock cycles), and to fetch \(5000\times5000\) elements, it’ll take forever (atleast in terms of clock cycles). We can’t use registers to store these values because it’s too small and it already contains CPU instructions and some small constants. To get around this problem, a fast memory called &lt;strong&gt;cache&lt;/strong&gt; is put inside the CPU chip (closer to ALU) which can hold some data for fast accesses. The size of a cache is really small as compared to RAM and can store just a few elements (e.g. RAM on my laptop is 16GB but my i7 CPU has only 9MB of cache).&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;It’s quite logical to think, why not increase the size of a register? The simple answer to this is cost. Registers are very expensive to make and increasing it’s size will make the CPU super expensive (not to mention the physical size will increase too). 
-Note: The same logic goes for cache memories as well.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;In order to understand how caches manage data, a look into the structure of cache is important.&lt;/p&gt;
-
-&lt;h4 id=&quot;general-structure-of-cache-memory&quot;&gt;General Structure of Cache Memory&lt;/h4&gt;
-&lt;p&gt;A cache is a &lt;strong&gt;hardware managed memory&lt;/strong&gt; made up of several &lt;em&gt;sets&lt;/em&gt; (or lines), which can hold data in a linear fashion.&lt;/p&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;/assets/01_Caches/fig03.png&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;Note that the data can be placed only in a specific portion of each cache line. I'll explain how the left out storage in each line is used in another blog post.&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;When a data is moved from RAM to a cache line, it’s moved in &lt;strong&gt;blocks&lt;/strong&gt;. Let me illustrate this using the code example.
-Suppose our cache has 5 lines where each line can hold 4 floating point (64 bit) values. So when the program tries to access  &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[1][1]&lt;/code&gt;, the block containing elements &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[A[1][1],A[2][1],A[3][1],A[4][1]]&lt;/code&gt; is moved to the 1st cache line in single go and then required element is fed to ALU from there. The size of this &lt;em&gt;block&lt;/em&gt; is decided by the amount a cache line can hold. This is known as &lt;strong&gt;Block Size (B)&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;div class=&quot;imgcap&quot;&gt;
-&lt;img src=&quot;/assets/01_Caches/fig04.png&quot; /&gt;
-&lt;div class=&quot;thecap&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Now in the next iteration when &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i=2,j=1&lt;/code&gt;, element &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[2][1]&lt;/code&gt; is already in cache so it can be accessed very quickly. Same goes for elements &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[3][1]&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[4][1]&lt;/code&gt;, but when &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[5][1]&lt;/code&gt; is required, block containing &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[A[5][1],A[6][1],A[7][1],A[8][1]]&lt;/code&gt; is moved to the 2nd cache line in one go, and so on. This solves the problem of slow data accesses from RAM but relies on programmers ability to use &lt;strong&gt;Data Locality&lt;/strong&gt;, i.e. after accessing say &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[1][1]&lt;/code&gt; it’s programmers responsibility to either reuse &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[1][1]&lt;/code&gt; or access &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[2][1]&lt;/code&gt;.&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;When all cache lines are full, eliminations happen where older elements are removed first. For example &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[A[21][1],A[22][1],A[23][1],A[24][1]]&lt;/code&gt; will be put in cache line 1.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Note that the movement of data in blocks is hardware managed hence it’s super efficient. So we only have to incur a time penalty for the movement of 1st element but following elements can be accessed quickly.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h1 id=&quot;analysing-rowaccess-vs-colaccess&quot;&gt;Analysing &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rowAccess&lt;/code&gt; vs &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;colAccess&lt;/code&gt;&lt;/h1&gt;
-&lt;p&gt;Let’s now compare the two implementations in detail. For simplicity, I’ll be doing hand simulation of first 6 iterations of both fuctions, but this happens for all other iterations. Also let’s assume it takes 1 clock cycle to fetch data from cache and 50 clock cycles to fetch data from RAM.&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Iteration 1 (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i=1,j=1&lt;/code&gt;):
-    &lt;ul&gt;
-      &lt;li&gt;No &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[1][1]&lt;/code&gt; in cache so elements &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[A[1][1],A[2][1],A[3][1],A[4][1]]&lt;/code&gt; are placed in cache.&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;colAccess&lt;/code&gt; time: 50 clock cycles.&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rowAccess&lt;/code&gt; time: 50 clock cycles.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Iteration 2 (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i=i,j=2&lt;/code&gt;):
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;colAccess&lt;/code&gt; time: 1 clock cycle as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[2][1]&lt;/code&gt; is found in cache. Here’s how cache will look like for this function.&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;div class=&quot;imgcap&quot;&gt;
-  &lt;img src=&quot;/assets/01_Caches/fig04.png&quot; /&gt;
-  &lt;div class=&quot;thecap&quot;&gt;&lt;/div&gt;
-  &lt;/div&gt;
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rowAccess&lt;/code&gt; time: 50 clock cycles as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[1][2]&lt;/code&gt; is not found in cache. However the whole block will be placed in cache.&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;div class=&quot;imgcap&quot;&gt;
-  &lt;img src=&quot;/assets/01_Caches/fig06.png&quot; /&gt;
-  &lt;div class=&quot;thecap&quot;&gt;&lt;/div&gt;
-  &lt;/div&gt;
-    &lt;blockquote&gt;
-      &lt;p&gt;I’m considering &lt;em&gt;Fully Associative Cache&lt;/em&gt;. Don’t worry, I’ll cover different types of &lt;strong&gt;Cache Mappings&lt;/strong&gt; in another blog.&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Iteration 3 (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i=i,j=3&lt;/code&gt;):
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;colAccess&lt;/code&gt; time: 1 clock cycle as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[3][1]&lt;/code&gt; is found in cache. Here’s how cache will look like for this function.&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;div class=&quot;imgcap&quot;&gt;
-  &lt;img src=&quot;/assets/01_Caches/fig04.png&quot; /&gt;
-  &lt;div class=&quot;thecap&quot;&gt;&lt;/div&gt;
-  &lt;/div&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rowAccess&lt;/code&gt; time: 50 clock cycles as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[1][3]&lt;/code&gt; is not found in cache. However the whole block will be placed again in cache.&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;div class=&quot;imgcap&quot;&gt;
-  &lt;img src=&quot;/assets/01_Caches/fig07.png&quot; /&gt;
-  &lt;div class=&quot;thecap&quot;&gt;&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Iteration 4 (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i=i,j=4&lt;/code&gt;):
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;colAccess&lt;/code&gt; time: 1 clock cycle as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[4][1]&lt;/code&gt; is found in cache. Here’s how cache will look like for this function.&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;div class=&quot;imgcap&quot;&gt;
-  &lt;img src=&quot;/assets/01_Caches/fig04.png&quot; /&gt;
-  &lt;div class=&quot;thecap&quot;&gt;&lt;/div&gt;
-  &lt;/div&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rowAccess&lt;/code&gt; time: 50 clock cycles as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[1][4]&lt;/code&gt; is not found in cache. However the whole block will be placed again in cache.&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;div class=&quot;imgcap&quot;&gt;
-  &lt;img src=&quot;/assets/01_Caches/fig08.png&quot; /&gt;
-  &lt;div class=&quot;thecap&quot;&gt;&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Iteration 5 (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i=i,j=5&lt;/code&gt;):
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;colAccess&lt;/code&gt; time: 50 clock cycles as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[5][1]&lt;/code&gt; is not found in cache. Here’s how cache will look like for this function.&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;div class=&quot;imgcap&quot;&gt;
-  &lt;img src=&quot;/assets/01_Caches/fig05.png&quot; /&gt;
-  &lt;div class=&quot;thecap&quot;&gt;&lt;/div&gt;
-  &lt;/div&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rowAccess&lt;/code&gt; time: 50 clock cycles as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[1][5]&lt;/code&gt; is not found in cache. However the whole block will be placed again in cache.&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;div class=&quot;imgcap&quot;&gt;
-  &lt;img src=&quot;/assets/01_Caches/fig10.png&quot; /&gt;
-  &lt;div class=&quot;thecap&quot;&gt;&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Iteration 6 (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;i=i,j=6&lt;/code&gt;):
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;colAccess&lt;/code&gt; time: 1 clock cycle as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[6][1]&lt;/code&gt; is found in cache. Here’s how cache will look like for this function.&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;div class=&quot;imgcap&quot;&gt;
-  &lt;img src=&quot;/assets/01_Caches/fig09.png&quot; /&gt;
-  &lt;div class=&quot;thecap&quot;&gt;&lt;/div&gt;
-  &lt;/div&gt;
-
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rowAccess&lt;/code&gt; time: 50 clock cycles as &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;A[1][6]&lt;/code&gt; is not found in cache. However the whole block will be placed again in cache after eliminating the data from line 1.&lt;/li&gt;
-    &lt;/ul&gt;
-    &lt;div class=&quot;imgcap&quot;&gt;
-  &lt;img src=&quot;/assets/01_Caches/fig10.png&quot; /&gt;
-  &lt;div class=&quot;thecap&quot;&gt;&lt;/div&gt;
-  &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;This goes on and on for all the elements and at the end, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;colAccess&lt;/code&gt; will have far fewer &lt;em&gt;cache misses&lt;/em&gt; and will run efficiently.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Notice how eliminations are crucial to this. If our matrix was say \(5\times5\), both implementations will be equally efficient.&lt;/p&gt;
-  &lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rand&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
-&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;×5&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Matrix&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Float64&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
-&lt;span class=&quot;mf&quot;&gt;2.28675&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;0.992201&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;2.73413&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;0.721498&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;8.47404&lt;/span&gt;
-&lt;span class=&quot;mf&quot;&gt;0.40424&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;8.14012&lt;/span&gt;   &lt;span class=&quot;mf&quot;&gt;7.4764&lt;/span&gt;   &lt;span class=&quot;mf&quot;&gt;7.52936&lt;/span&gt;   &lt;span class=&quot;mf&quot;&gt;3.13966&lt;/span&gt;
-&lt;span class=&quot;mf&quot;&gt;8.38979&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;7.98449&lt;/span&gt;   &lt;span class=&quot;mf&quot;&gt;9.05752&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;1.56374&lt;/span&gt;   &lt;span class=&quot;mf&quot;&gt;5.53432&lt;/span&gt;
-&lt;span class=&quot;mf&quot;&gt;8.06838&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;3.65573&lt;/span&gt;   &lt;span class=&quot;mf&quot;&gt;8.05323&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;4.22322&lt;/span&gt;   &lt;span class=&quot;mf&quot;&gt;7.1832&lt;/span&gt;
-&lt;span class=&quot;mf&quot;&gt;8.04449&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;3.40892&lt;/span&gt;   &lt;span class=&quot;mf&quot;&gt;4.79235&lt;/span&gt;  &lt;span class=&quot;mf&quot;&gt;4.87289&lt;/span&gt;   &lt;span class=&quot;mf&quot;&gt;1.25914&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-  &lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@btime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rowAccess&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;mf&quot;&gt;25.951&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ns&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;allocations&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-  &lt;div class=&quot;language-julia highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nd&quot;&gt;@btime&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;colAccess&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;mf&quot;&gt;23.059&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ns&lt;/span&gt; &lt;span class=&quot;x&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;allocations&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;x&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-  &lt;p&gt;See how the runtime is almost the same for both now.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
-&lt;p&gt;This post covers:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Basics of memory hierarchy of modern computers.&lt;/li&gt;
-  &lt;li&gt;Movement of data inbetween RAM and Cache.&lt;/li&gt;
-  &lt;li&gt;Basic workings of Cache.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;useful-links&quot;&gt;Useful Links&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;Programming Language: &lt;a href=&quot;https://julialang.org/&quot;&gt;Julia Programming Language&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Example Code: &lt;a href=&quot;https://github.com/tgautam03/tgautam03.github.io/blob/master/assets/01_Caches/Cache%20Misses.ipynb&quot;&gt;jupyter notebook&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-        <pubDate>Sun, 31 Oct 2021 16:00:00 -0600</pubDate>
-        <link>http://localhost:4000/Computational-Sciences/2021/10/31/CacheBasics/</link>
-        <guid isPermaLink="true">http://localhost:4000/Computational-Sciences/2021/10/31/CacheBasics/</guid>
         
         
       </item>
